@@ -12,14 +12,30 @@ CREATE TABLE Clients
     city         VARCHAR2 (100 CHAR) NOT NULL ,
     address      VARCHAR2 (150 CHAR) NOT NULL
   ) ;
+  
+CREATE TABLE Contracts_type
+  (
+    id        INTEGER NOT NULL PRIMARY KEY ,
+    name      VARCHAR2 (20 CHAR) NOT NULL UNIQUE ,
+    fee       INTEGER NOT NULL ,
+    type      VARCHAR2 (3 CHAR) NOT NULL ,
+    ppv       NUMBER(3,2) ,
+    ppc       NUMBER(3,2) ,
+    zapp      INTEGER NOT NULL CHECK (zapp <= 100) ,
+    ppm       NUMBER(3,2) ,
+    ppd       NUMBER(3,2) ,
+    promotion INTEGER NOT NULL CHECK (promotion <= 100)
+  ) ;
 
 CREATE TABLE Contracts_active
   (
-    id INTEGER NOT NULL PRIMARY KEY ,
-    Client_id INTEGER NOT NULL FOREIGN KEY REFERENCES Clients(id) ,
-    start_date DATE NOT NULL ,
-    end_date DATE ,
-    contract_type INTEGER FOREIGN KEY REFERENCES Contracts_type(id) -- O mejor usar name?
+    id            INTEGER NOT NULL PRIMARY KEY ,
+    client_id     INTEGER NOT NULL ,
+    start_date    DATE NOT NULL ,
+    end_date      DATE ,
+    contract_type INTEGER NOT NULL , -- O mejor usar name?
+    CONSTRAINT fk_clients FOREIGN KEY (client_id) REFERENCES Clients(id),
+    CONSTRAINT fk_contracts_type FOREIGN KEY (contract_type) REFERENCES Contracts_type(id)
   ) ;
 
 CREATE TABLE Contracts_all -- Ambas tablas de contratos tienen que estar "sincronizadas" de alguna forma
