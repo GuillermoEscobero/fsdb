@@ -45,7 +45,7 @@ CREATE TABLE Contracts_all -- Ambas tablas de contratos tienen que estar "sincro
     Client_id INTEGER ,
     start_date DATE NOT NULL ,
     end_date DATE ,
-    contract_type INTEGER FOREIGN KEY REFERENCES Contracts_type(id) ,
+    contract_type INTEGER NOT NULL ,
     CONSTRAINT fk_clients FOREIGN KEY (client_id) REFERENCES Clients(id) ,
     CONSTRAINT fk_contracts_type FOREIGN KEY (contract_type) REFERENCES Contracts_type(id) ,
     CONSTRAINT CHECK (start_date < end_date)
