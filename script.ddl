@@ -34,31 +34,21 @@ CREATE TABLE Contracts_active
     start_date    DATE NOT NULL ,
     end_date      DATE ,
     contract_type INTEGER NOT NULL , -- O mejor usar name?
-    CONSTRAINT fk_clients FOREIGN KEY (client_id) REFERENCES Clients(id),
-    CONSTRAINT fk_contracts_type FOREIGN KEY (contract_type) REFERENCES Contracts_type(id)
+    CONSTRAINT fk_clients FOREIGN KEY (client_id) REFERENCES Clients(id) ,
+    CONSTRAINT fk_contracts_type FOREIGN KEY (contract_type) REFERENCES Contracts_type(id) ,
+    CONSTRAINT CHECK (start_date < end_date)
   ) ;
 
 CREATE TABLE Contracts_all -- Ambas tablas de contratos tienen que estar "sincronizadas" de alguna forma
   (
     Contracts_active_id INTEGER NOT NULL PRIMARY KEY,
-    Client_id INTEGER FOREIGN KEY REFERENCES Clients(id) ,
+    Client_id INTEGER ,
     start_date DATE NOT NULL ,
     end_date DATE ,
-    contract_type INTEGER FOREIGN KEY REFERENCES Contracts_type(id)
-  ) ;
-
-CREATE TABLE Contracts_type -- El tipo lo he declarado boolean porque solo hay PPC y PPV
-  (
-    id INTEGER NOT NULL PRIMARY KEY ,
-    name VARCHAR2 (20 CHAR) NOT NULL UNIQUE ,
-    fee INTEGER NOT NULL ,
-    type BOOLEAN NOT NULL ,
-    ppv NUMBER(3,2) ,
-    ppc NUMBER(3,2) ,
-    zapp INTEGER NOT NULL CHECK (zapp <= 100) ,
-    ppm NUMBER(3,2) ,
-    ppd NUMBER(3,2) ,
-    promotion INTEGER NOT NULL CHECK (promotion <= 100)
+    contract_type INTEGER FOREIGN KEY REFERENCES Contracts_type(id) ,
+    CONSTRAINT fk_clients FOREIGN KEY (client_id) REFERENCES Clients(id) ,
+    CONSTRAINT fk_contracts_type FOREIGN KEY (contract_type) REFERENCES Contracts_type(id) ,
+    CONSTRAINT CHECK (start_date < end_date)
   ) ;
 
 CREATE TABLE Movies
