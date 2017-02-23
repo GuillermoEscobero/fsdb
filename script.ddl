@@ -2,92 +2,96 @@
 
 CREATE TABLE Clients
   (
-    id           INTEGER NOT NULL PRIMARY KEY ,
-    email        VARCHAR2 (200 CHAR) NOT NULL UNIQUE ,
-    name         VARCHAR2 (50 CHAR) NOT NULL ,
-    surname      VARCHAR2 (50 CHAR) NOT NULL ,
-    surname2     VARCHAR2 (50 CHAR) ,
-    phone_number NUMBER(9) UNIQUE , -- Ver aquí tema prefijos de países
-    postal_code  INTEGER NOT NULL ,
-    city         VARCHAR2 (100 CHAR) NOT NULL ,
-    address      VARCHAR2 (150 CHAR) NOT NULL
+    clientid     VARCHAR2 (15 CHAR) PRIMARY KEY ,
+    email        VARCHAR2 (100 CHAR) NOT NULL UNIQUE ,
+    dni          VARCHAR2 (9 CHAR) NOT NULL UNIQUE,
+    name         VARCHAR2 (100 CHAR) NOT NULL ,
+    surname      VARCHAR2 (100 CHAR) NOT NULL ,
+    sec_surname  VARCHAR2 (100 CHAR) ,
+    birthdate    DATE NOT NULL , -- CHECK BIRTHDATE < SYS.CURRENT_DATE (Igual es con trigger) AL IMPORTARLO USAMOS TODATE()
+    age          NUMBER(3,0) NOT NULL , -- Igual se puede sacar con una funcion, es redundante
+    phonen       NUMBER(14,0) NOT NULL UNIQUE , -- Ver aquí tema prefijos de países
+    zipcode      VARCHAR2 (10 CHAR)  NOT NULL ,
+    town         VARCHAR2 (100 CHAR) NOT NULL ,
+    address      VARCHAR2 (150 CHAR) NOT NULL ,
+    country      VARCHAR2 (100 CHAR) NOT NULL
   ) ;
   
 CREATE TABLE Contracts_type
   (
-    id        INTEGER NOT NULL PRIMARY KEY ,
-    name      VARCHAR2 (20 CHAR) NOT NULL UNIQUE ,
+    name      VARCHAR2 (50 CHAR) PRIMARY KEY ,
     fee       INTEGER NOT NULL ,
     type      VARCHAR2 (3 CHAR) NOT NULL ,
     ppv       NUMBER(3,2) ,
     ppc       NUMBER(3,2) ,
-    zapp      INTEGER NOT NULL CHECK (zapp <= 100) ,
+    zapp      NUMBER(3,0) NOT NULL CHECK (zapp <= 100) ,
     ppm       NUMBER(3,2) ,
     ppd       NUMBER(3,2) ,
-    promotion INTEGER NOT NULL CHECK (promotion <= 100)
+    promotion NUMBER(3,0) NOT NULL CHECK (promotion <= 100)
   ) ;
 
-CREATE TABLE Contracts_active
+CREATE TABLE Contracts
   (
-    id            INTEGER NOT NULL PRIMARY KEY ,
-    client_id     INTEGER NOT NULL ,
-    start_date    DATE NOT NULL ,
-    end_date      DATE ,
-    contract_type INTEGER NOT NULL , -- O mejor usar name?
-    CONSTRAINT fk_clients FOREIGN KEY (client_id) REFERENCES Clients(id) ,
-    CONSTRAINT fk_contracts_type FOREIGN KEY (contract_type) REFERENCES Contracts_type(id) ,
-    CONSTRAINT CHECK (start_date < end_date)
-  ) ;
-
-CREATE TABLE Contracts_all -- Ambas tablas de contratos tienen que estar "sincronizadas" de alguna forma
-  (
-    Contracts_active_id INTEGER NOT NULL PRIMARY KEY,
-    Client_id INTEGER ,
-    start_date DATE NOT NULL ,
-    end_date DATE ,
-    contract_type INTEGER NOT NULL ,
-    CONSTRAINT fk_clients FOREIGN KEY (client_id) REFERENCES Clients(id) ,
-    CONSTRAINT fk_contracts_type FOREIGN KEY (contract_type) REFERENCES Contracts_type(id) ,
-    CONSTRAINT CHECK (start_date < end_date)
+    contractid    VARCHAR2 (10 CHAR) PRIMARY KEY ,
+    clientid      VARCHAR(15 CHAR) NOT NULL ,
+    startdate     DATE NOT NULL ,
+    enddate       DATE ,
+    contract_type VARCHAR2 (50 CHAR) NOT NULL ,
+    
+    CONSTRAINT fk_clients FOREIGN KEY (clientid) REFERENCES Clients(clientid) ,
+    CONSTRAINT fk_contracts_type FOREIGN KEY (contract_type) REFERENCES Contracts_type(name)
+    --CONSTRAINT CHECK (start_date < end_date)
   ) ;
 
 CREATE TABLE Movies
   (
-    id INTEGER NOT NULL PRIMARY KEY ,
-    title VARCHAR2 (100 CHAR) NOT NULL ,
-    year INTEGER NOT NULL ,
-    plot_keywords ARRAY?
-    duration TIME NOT NULL ,
-    director_name VARCHAR2 (100 CHAR) NOT NULL ,
-    genres
-    language VARCHAR2 (50 CHAR) NOT NULL ,
-    country VARCHAR (50 CHAR) NOT NULL ,
-    budget NUMBER ,
-    gross
-    content_rating
-    color BOOLEAN ,
-    aspect_ratio
-    1st_actor_name -- ARRAY O MULTISET OF ACTORS' NAME?
-    2nd_actor_name
-    3rd_actor_name
-    facebook_likes -- ARRAY OF facebook_likes?
-    director_facebook_likes
-    1st_actor_facebook_likes
-    2nd_actor_facebook_likes
-    3rd_actor_facebook_likes
-    cast_facebook_likes
-    num_critics_reviews
-    num_public_reviews
-    num_votes
-    imdb_score
-    imdb_link
-    facenumber
+   COLOR                   VARCHAR2(100 CHAR) , 
+   DIRECTOR_NAME           VARCHAR2(100 CHAR) , 
+   NUM_CRITIC_FOR_REVIEWS  VARCHAR2(100 CHAR) , 
+   DURATION                VARCHAR2(100 CHAR) , 
+   DIRECTOR_FACEBOOK_LIKES VARCHAR2(100 CHAR) , 
+   ACTOR_3_FACEBOOK_LIKES  VARCHAR2(100 CHAR) , 
+   ACTOR_2_NAME            VARCHAR2(100 CHAR) ,
+   ACTOR_1_FACEBOOK_LIKES  VARCHAR2(100 CHAR) , 
+   GROSS                   VARCHAR2(100 CHAR) , 
+   GENRES                  VARCHAR2(100 CHAR) , 
+   ACTOR_1_NAME            VARCHAR2(100 CHAR) , 
+   MOVIE_TITLE             VARCHAR2(100 CHAR) , 
+   NUM_VOTED_USERS         VARCHAR2(100 CHAR) ,
+   CAST_TOTAL_FACEBOOK_LIKES VARCHAR2(100 CHAR) , 
+   ACTOR_3_NAME VARCHAR2(100 CHAR) , 
+   FACENUMBER_IN_POSTER VARCHAR2(100 CHAR) , 
+   PLOT_KEYWORDS VARCHAR2(150 CHAR) , 
+   MOVIE_IMDB_LINK VARCHAR2(100 CHAR) ,
+   NUM_USER_FOR_REVIEWS VARCHAR2(100 CHAR) ,
+   FILMING_LANGUAGE VARCHAR2(100 CHAR) ,
+   COUNTRY VARCHAR2(100 CHAR) ,
+   CONTENT_RATING VARCHAR2(100 CHAR) ,
+   BUDGET VARCHAR2(100 CHAR) ,
+   TITLE_YEAR VARCHAR2(100 CHAR) ,
+   ACTOR_2_FACEBOOK_LIKES VARCHAR2(100 CHAR) ,
+   IMDB_SCORE VARCHAR2(100 CHAR) ,
+   ASPECT_RATIO VARCHAR2(100 CHAR) , 
+   MOVIE_FACEBOOK_LIKES VARCHAR2(100 CHAR) 
   ) ;
 
 CREATE TABLE TVSeries
   (
-    id INTEGER NOT NULL PRIMARY KEY ,
-    title VARCHAR2(100 CHAR) NOT NULL ,
-    seasons INTEGER ,
-    episodes INTEGER ,
+   TITLE VARCHAR2(100 CHAR) PRIMARY KEY , 
+   TOTAL_SEASONS NUMBER(3, 0) ,
+   SEASON NUMBER(3, 0) ,
+   AVGDURATION NUMBER(3, 0) , 
+   EPISODES NUMBER(3, 0) 
+  ) ;
+  
+CREATE TABLE Taps 
+  (
+   CLIENT VARCHAR2(15 CHAR) , 
+   TITLE VARCHAR2(100 CHAR) , 
+   DURATION NUMBER(15, 0) , 
+   SEASON NUMBER(15, 0) , 
+   EPISODE NUMBER(15, 0) , 
+   VIEWDATE VARCHAR2(10 CHAR) , 
+   VIEWHOUR VARCHAR2(5 CHAR) , 
+   VIEWPCT VARCHAR2(5 CHAR) 
   ) ;
