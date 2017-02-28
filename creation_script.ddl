@@ -8,15 +8,16 @@ CREATE TABLE Clients
     name         VARCHAR2 (100 CHAR) NOT NULL ,
     surname      VARCHAR2 (100 CHAR) NOT NULL ,
     sec_surname  VARCHAR2 (100 CHAR) ,
-    birthdate    DATE NOT NULL , -- CHECK BIRTHDATE < SYS.CURRENT_DATE (Igual es con trigger) AL IMPORTARLO USAMOS TODATE()
-    age          NUMBER(3,0) NOT NULL , -- Igual se puede sacar con una funcion, es redundante
-    phonen       NUMBER(14,0) NOT NULL UNIQUE , -- Ver aquí tema prefijos de países
+    birthdate    DATE NOT NULL , -- AL IMPORTARLO USAMOS TODATE()
+    age          NUMBER(3) NOT NULL , -- Igual se puede sacar con una funcion, es redundante
+    phonen       NUMBER(14) ,
     zipcode      VARCHAR2 (10 CHAR)  NOT NULL ,
     town         VARCHAR2 (100 CHAR) NOT NULL ,
     address      VARCHAR2 (150 CHAR) NOT NULL ,
     country      VARCHAR2 (100 CHAR) NOT NULL ,
 
-    CONSTRAINT PK_clients PRIMARY KEY (clientid)
+    CONSTRAINT PK_clients PRIMARY KEY (clientid) ,
+    CONSTRAINT CH_clients1 CHECK (birthdate<SYSDATE)
   ) ;
 
 CREATE TABLE Contracts_types
@@ -32,8 +33,8 @@ CREATE TABLE Contracts_types
 
     CONSTRAINT PK_products PRIMARY KEY (name) ,
     CONSTRAINT CK_products1 CHECK (type IN ('C','V')) ,
-    CONSTRAINT CK_products2 CHECK (PROMO between 0 and  100) ,
-    CONSTRAINT CK_products3 CHECK (ZAPP between 0 and  99)
+    CONSTRAINT CK_products2 CHECK (PROMO between 0 and 100) ,
+    CONSTRAINT CK_products3 CHECK (ZAPP between 0 and 99)
 ) ;
 
 --INSERT INTO products VALUES('Free Rider',10,'C',2.5,5,0,0.95,5);
@@ -48,7 +49,7 @@ CREATE TABLE Contracts_types
 CREATE TABLE Contracts
   (
     contractid    VARCHAR2 (10 CHAR) ,
-    clientid      VARCHAR(15 CHAR) NOT NULL ,
+    clientid      VARCHAR(15 CHAR) , -- Esto con el trigger al insertar, porque luego se puede borrar si lo piden
     startdate     DATE NOT NULL ,
     enddate       DATE ,
     contract_type VARCHAR2 (50 CHAR) NOT NULL ,
@@ -58,6 +59,8 @@ CREATE TABLE Contracts
     CONSTRAINT FK_contracts_type FOREIGN KEY (contract_type) REFERENCES Contracts_types(name)
     --CONSTRAINT CHECK (start_date < end_date) Todas estas comprobaciones van con triggers de fijo al INSERT o UPDATE
   ) ;
+
+CREATE VIEW Effective_contracts AS SELECT * FROM Contracts WHERE clientid != NULL;
 
 CREATE TABLE Movies
   (
@@ -88,12 +91,14 @@ CREATE TABLE Movies
    ACTOR_2_FACEBOOK_LIKES     VARCHAR2(100 CHAR) ,
    IMDB_SCORE                 VARCHAR2(100 CHAR) ,
    ASPECT_RATIO               VARCHAR2(100 CHAR) ,
-   MOVIE_FACEBOOK_LIKES       VARCHAR2(100 CHAR)
+   MOVIE_FACEBOOK_LIKES       VARCHAR2(100 CHAR) ,
+
+   CONSTRAINT CK_movies1 CHECK (type IN ('Color','b/n'))
   ) ;
 
 CREATE TABLE TVSeries
   (
-   TITLE         VARCHAR2(100 CHAR) PRIMARY KEY ,
+   TITLE         VARCHAR2(100 CHAR) ,
    TOTAL_SEASONS NUMBER(3) ,
    SEASON        NUMBER(3) ,
    AVGDURATION   NUMBER(3) ,
