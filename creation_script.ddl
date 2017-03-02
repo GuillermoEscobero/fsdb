@@ -9,7 +9,7 @@ CREATE TABLE Clients
     surname      VARCHAR2 (100 CHAR) NOT NULL ,
     sec_surname  VARCHAR2 (100 CHAR) ,
     birthdate    DATE NOT NULL , -- AL IMPORTARLO USAMOS TODATE()
-    age          NUMBER(3) NOT NULL , -- Igual se puede sacar con una funcion, es redundante
+    --age          NUMBER(3) NOT NULL , -- Igual se puede sacar con una funcion, es REDUNDANTE
     phonen       NUMBER(14) ,
     zipcode      VARCHAR2 (10 CHAR)  NOT NULL ,
     town         VARCHAR2 (100 CHAR) NOT NULL ,
@@ -37,15 +37,6 @@ CREATE TABLE Contracts_types
     CONSTRAINT CK_products3 CHECK (ZAPP between 0 and 99)
 ) ;
 
---INSERT INTO products VALUES('Free Rider',10,'C',2.5,5,0,0.95,5);
---INSERT INTO products VALUES('Premium Rider',39,'V',0.5,0,0.01,0,3);
---INSERT INTO products VALUES('TVrider',29,'C',2,8,0,0.5,0);
---INSERT INTO products VALUES('Flat Rate Lover',39,'C',2.5,0,0,0,5);
---INSERT INTO products VALUES('Short Timer',15,'C',2.5,5,0.01,0,3);
---INSERT INTO products VALUES('Content Master',20,'C',1.75,4,1.02,0,3);
---INSERT INTO products VALUES('Boredom Fighter',10,'V',1,1,0,0.95,0);
---INSERT INTO products VALUES('Low Cost Rate',0,'V',0.95,4,0,1.45,3);
-
 CREATE TABLE Contracts
   (
     contractid    VARCHAR2 (10 CHAR) ,
@@ -59,6 +50,13 @@ CREATE TABLE Contracts
     CONSTRAINT FK_contracts_type FOREIGN KEY (contract_type) REFERENCES Contracts_types(name)
     --CONSTRAINT CHECK (start_date < end_date) Todas estas comprobaciones van con triggers de fijo al INSERT o UPDATE
   ) ;
+
+CREATE TRIGGER clients_insert_notNull
+BEFORE INSERT ON Contracts
+  FOR EACH ROW
+BEGIN
+  IF NEW.clientid == NULL THEN
+
 
 CREATE VIEW Effective_contracts AS SELECT * FROM Contracts WHERE clientid != NULL;
 
