@@ -10,7 +10,7 @@ CREATE TABLE Clients
     sec_surname  VARCHAR2 (100 CHAR) ,
     birthdate    DATE NOT NULL , -- AL IMPORTARLO USAMOS TODATE()
     --age          NUMBER(3) NOT NULL , -- Igual se puede sacar con una funcion, es REDUNDANTE
-    phonen       NUMBER(14) ,
+    phonen       NUMBER(14) UNIQUE ,
     zipcode      VARCHAR2 (10 CHAR)  NOT NULL ,
     town         VARCHAR2 (100 CHAR) NOT NULL ,
     address      VARCHAR2 (150 CHAR) NOT NULL ,
@@ -40,7 +40,7 @@ CREATE TABLE Contracts_types
 CREATE TABLE Contracts
   (
     contractid    VARCHAR2 (10 CHAR) ,
-    clientid      VARCHAR(15 CHAR) , -- Esto con el trigger al insertar, porque luego se puede borrar si lo piden
+    clientid      VARCHAR(15 CHAR) NOT NULL , -- Esto con el trigger al insertar, porque luego se puede borrar si lo piden
     startdate     DATE NOT NULL ,
     enddate       DATE ,
     contract_type VARCHAR2 (50 CHAR) NOT NULL ,
@@ -51,14 +51,7 @@ CREATE TABLE Contracts
     --CONSTRAINT CHECK (start_date < end_date) Todas estas comprobaciones van con triggers de fijo al INSERT o UPDATE
   ) ;
 
-CREATE TRIGGER clients_insert_notNull
-BEFORE INSERT ON Contracts
-  FOR EACH ROW
-BEGIN
-  IF NEW.clientid == NULL THEN
-
-
-CREATE VIEW Effective_contracts AS SELECT * FROM Contracts WHERE clientid != NULL;
+CREATE VIEW Effective_contracts AS SELECT * FROM Contracts WHERE enddate>=SYSDATE;
 
 CREATE TABLE Movies
   (
