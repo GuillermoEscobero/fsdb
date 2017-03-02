@@ -22,14 +22,14 @@ CREATE TABLE Clients
 
 CREATE TABLE Contracts_types
   (
-    name 	    VARCHAR2(50) ,
-    fee		    NUMBER(4,1) NOT NULL ,
-    type		  VARCHAR2(1) NOT NULL ,
-    tap_cost	NUMBER(4,2) NOT NULL ,
-    zapp		  NUMBER(2) DEFAULT 0 NOT NULL ,
-    ppm		    NUMBER(4,2) DEFAULT 0 NOT NULL ,
-    ppd		    NUMBER(4,2) DEFAULT 0 NOT NULL ,
-    promo		  NUMBER(3) DEFAULT 0 NOT NULL ,
+    name      VARCHAR2(50) ,
+    fee       NUMBER(4,1) NOT NULL ,
+    type      VARCHAR2(1) NOT NULL ,
+    tap_cost  NUMBER(4,2) NOT NULL ,
+    zapp      NUMBER(2) DEFAULT 0 NOT NULL ,
+    ppm       NUMBER(4,2) DEFAULT 0 NOT NULL ,
+    ppd       NUMBER(4,2) DEFAULT 0 NOT NULL ,
+    promo     NUMBER(3) DEFAULT 0 NOT NULL ,
 
     CONSTRAINT PK_products PRIMARY KEY (name) ,
     CONSTRAINT CK_products1 CHECK (type IN ('C','V')) ,
@@ -93,7 +93,7 @@ CREATE TABLE Movies
    ASPECT_RATIO               VARCHAR2(100 CHAR) ,
    MOVIE_FACEBOOK_LIKES       VARCHAR2(100 CHAR) ,
 
-   CONSTRAINT CK_movies1 CHECK (type IN ('Color','b/n'))
+   CONSTRAINT CK_movies1 CHECK (type IN ('Color','Black and White'))
   ) ;
 
 CREATE TABLE TVSeries
