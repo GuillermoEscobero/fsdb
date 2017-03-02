@@ -8,7 +8,7 @@ CREATE TABLE Clients
     name         VARCHAR2 (100 CHAR) NOT NULL ,
     surname      VARCHAR2 (100 CHAR) NOT NULL ,
     sec_surname  VARCHAR2 (100 CHAR) ,
-    birthdate    DATE NOT NULL , -- AL IMPORTARLO USAMOS TODATE()
+    birthdate    VARCHAR2 (100 CHAR) NOT NULL ,
     --age          NUMBER(3) NOT NULL , -- Igual se puede sacar con una funcion, es REDUNDANTE
     phonen       NUMBER(14) UNIQUE ,
     zipcode      VARCHAR2 (10 CHAR)  NOT NULL ,
@@ -17,7 +17,7 @@ CREATE TABLE Clients
     country      VARCHAR2 (100 CHAR) NOT NULL ,
 
     CONSTRAINT PK_clients PRIMARY KEY (clientid) ,
-    CONSTRAINT CH_clients1 CHECK (birthdate<SYSDATE)
+    CONSTRAINT CH_clients1 CHECK (to_date(birthdate, 'YYYY-MM-DD')<=SYSDATE)
   ) ;
 
 CREATE TABLE Contracts_types
