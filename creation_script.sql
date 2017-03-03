@@ -78,7 +78,7 @@ CREATE TABLE Movies
    TITLE_YEAR                 DATE ,
    ACTOR_2_FACEBOOK_LIKES     NUMBER(6) ,
    IMDB_SCORE                 NUMBER(3,1) ,
-   ASPECT_RATIO               NUMBER(3,2) ,
+   ASPECT_RATIO               NUMBER(4,2) ,
    MOVIE_FACEBOOK_LIKES       NUMBER(6) ,
    CONSTRAINT PK_movies PRIMARY KEY (MOVIE_TITLE) ,
    CONSTRAINT CK_movies1 CHECK (COLOR IN ('Color','Black and White')) ,
