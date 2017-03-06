@@ -49,7 +49,7 @@ CREATE TABLE Contracts
     CONSTRAINT PK_contracts PRIMARY KEY (contractid) ,
     CONSTRAINT FK_clients        FOREIGN KEY (clientid)      REFERENCES Clients(clientid) ,
     CONSTRAINT FK_contracts_type FOREIGN KEY (contract_type) REFERENCES Contracts_types(name) ,
-    CONSTRAINT CH_contracts CHECK (startdate < enddate)
+    CONSTRAINT CK_contracts CHECK (startdate < enddate)
   ) ;
 
 CREATE TABLE Movies
@@ -111,7 +111,7 @@ CREATE TABLE TVSeries
    AVGDURATION   NUMBER(3) ,
    EPISODES      NUMBER(3) ,
    CONSTRAINT PK_TVseries PRIMARY KEY (TITLE) ,
-   CONSTRAINT CK_TVseries1 CHECK (TOTAL_SEASONS <= SEASON) ,
+   CONSTRAINT CK_TVseries1 CHECK (TOTAL_SEASONS >= SEASON) ,
    CONSTRAINT CK_TVseries2 CHECK (TOTAL_SEASONS >= 0) ,
    CONSTRAINT CK_TVseries3 CHECK (SEASON >= 0) ,
    CONSTRAINT CK_TVseries4 CHECK (AVGDURATION >= 0) ,
