@@ -15,11 +15,11 @@ CREATE TABLE Clients
     CONSTRAINT U_clients2 UNIQUE (dni) ,
     CONSTRAINT U_clients3 UNIQUE (phonen),
     CONSTRAINT CK_clients1 CHECK (REGEXP_LIKE(dni, '^[0-9]{8}+[A-Za-z]{1}$')) ,
-    CONSTRAINT CK_clients2 CHECK (REGEXP_LIKE(email, '^[A-Za-z]*[A-Za-z0-9.]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$')) ,
+    CONSTRAINT CK_clients2 CHECK (REGEXP_LIKE(email, '^[A-Za-z]*[A-Za-z0-9._]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$')) ,
     CONSTRAINT CK_clients3 CHECK (phonen > 0)
 	) ;
 
-CREATE TABLE Contracts_types
+CREATE TABLE Products
   (
     name      VARCHAR2(50) ,
     fee       NUMBER(4,1) NOT NULL ,
@@ -48,7 +48,7 @@ CREATE TABLE Contracts
     contract_type VARCHAR2 (50 CHAR) NOT NULL ,
     CONSTRAINT PK_contracts PRIMARY KEY (contractid) ,
     CONSTRAINT FK_clients        FOREIGN KEY (clientid)      REFERENCES Clients(clientid) ,
-    CONSTRAINT FK_contracts_type FOREIGN KEY (contract_type) REFERENCES Contracts_types(name) ,
+    CONSTRAINT FK_contracts_type FOREIGN KEY (contract_type) REFERENCES Products(name) ,
     CONSTRAINT CK_contracts CHECK (startdate < enddate)
   ) ;
 
@@ -110,7 +110,7 @@ CREATE TABLE TVSeries
    SEASON        NUMBER(2) ,
    AVGDURATION   NUMBER(3) ,
    EPISODES      NUMBER(3) ,
-   CONSTRAINT PK_TVseries PRIMARY KEY (TITLE) ,
+   CONSTRAINT PK_TVseries PRIMARY KEY (TITLE, SEASON) ,
    CONSTRAINT CK_TVseries1 CHECK (TOTAL_SEASONS >= SEASON) ,
    CONSTRAINT CK_TVseries2 CHECK (TOTAL_SEASONS >= 0) ,
    CONSTRAINT CK_TVseries3 CHECK (SEASON >= 0) ,
@@ -136,3 +136,23 @@ CREATE TABLE Taps
    CONSTRAINT CK_Taps4 CHECK (VIEWPCT BETWEEN 0 AND 100) --MIRAR EL TEMA DEL PORCENTAJE
    --CHECK QUE VIEWHOUR SEA UNA HORA Y UNOS MINUTOS (EL PAPER DICE QUE CON PRECISION DE MINUTOS)
    ) ;
+
+CREATE TABLE PurchasedMovies
+  (
+
+  );
+
+CREATE TABLE PurchasedTVSeries
+  (
+
+  );
+
+CREATE TABLE MovieLicenses
+  (
+
+  );
+
+CREATE TABLE TVSeriesLicenses
+  (
+
+  );
