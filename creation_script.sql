@@ -15,7 +15,7 @@ CREATE TABLE Clients
     CONSTRAINT U_clients2 UNIQUE (dni) ,
     CONSTRAINT U_clients3 UNIQUE (phonen),
     CONSTRAINT CK_clients1 CHECK (REGEXP_LIKE(dni, '^[0-9]{8}+[A-Za-z]{1}$')) ,
-    CONSTRAINT CK_clients2 CHECK (REGEXP_LIKE(email, '^[A-Za-z]+[A-Za-z0-9.]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$')) ,
+    CONSTRAINT CK_clients2 CHECK (REGEXP_LIKE(email, '^[A-Za-z]*[A-Za-z0-9.]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$')) ,
     CONSTRAINT CK_clients3 CHECK (phonen > 0)
 	) ;
 
