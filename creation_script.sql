@@ -160,7 +160,7 @@ CREATE TABLE PurchasedMovies
     startdate     DATE NOT NULL ,
     enddate       DATE ,
     --no vamos a llenar la tabla porque no podemos
-    
+
     CONSTRAINT PK_PurchasedMovies PRIMARY KEY (clientid, TITLE, purchase_date) ,
     CONSTRAINT FK_PurchasedMovies1 FOREIGN KEY (TITLE) REFERENCES Movies(MOVIE_TITLE) ,
     CONSTRAINT FK_PurchasedMovies2 FOREIGN KEY (clientid) REFERENCES Clients(clientid)
@@ -173,18 +173,24 @@ CREATE TABLE PurchasedTVSeries
     purchase_date DATE ,
     --purchase type?
     CONSTRAINT PK_PurchasedTVSeries PRIMARY KEY (clientid, TITLE, purchase_date) ,
-    CONSTRAINT FK_PurchasedTVSeries1 FOREIGN KEY (TITLE) REFERENCES Movies(MOVIE_TITLE) ,
+    CONSTRAINT FK_PurchasedTVSeries1 FOREIGN KEY (TITLE) REFERENCES TVSeries(TITLE) ,
     CONSTRAINT FK_PurchasedTVSeries2 FOREIGN KEY (clientid) REFERENCES Clients(clientid)
   );
 
 CREATE TABLE MovieLicenses
   (
-
+    clientid      VARCHAR2(15 CHAR) ,
+    TITLE         VARCHAR2(100 CHAR) ,
+    CONSTRAINT FK_MovieLicenses1 FOREIGN KEY (TITLE) REFERENCES Movies(MOVIE_TITLE) ,
+    CONSTRAINT FK_MovieLicenses2 FOREIGN KEY (clientid) REFERENCES Clients(clientid)
   );
 
 CREATE TABLE TVSeriesLicenses
   (
-
+    clientid      VARCHAR2(15 CHAR) ,
+    TITLE         VARCHAR2(100 CHAR) ,
+    CONSTRAINT FK_TVSeriesLicenses1 FOREIGN KEY (TITLE) REFERENCES TVSeries(TITLE) ,
+    CONSTRAINT FK_TVSeriesLicenses2 FOREIGN KEY (clientid) REFERENCES Clients(clientid)
   );
 
 --genero: en el ñroximo assignment va a haber que separar los generos, de momento nos la pela
