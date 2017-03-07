@@ -52,7 +52,7 @@ CREATE TABLE Contracts
     CONSTRAINT CK_contracts CHECK (startdate < enddate)
   ) ;
 
-CREATE VIEW EFFECTIVE_CONTRACTS AS SELECT * FROM CONTRACTS WHERE enddate>=SYSDATE;
+CREATE VIEW EFFECTIVE_CONTRACTS AS SELECT * FROM CONTRACTS WHERE SYSDATE BETWEEN startdate AND enddate;
 
 CREATE TABLE Movies
   (
@@ -190,7 +190,6 @@ CREATE TABLE TVSeriesLicenses
   );
 
 --genero: en el ñroximo assignment va a haber que separar los generos, de momento nos la pela
---contracts: vamos a hacer la view del demonio
 --545342 en OLD_TAPS
 --230929 en tvTaps
 --313474 en movietaps
