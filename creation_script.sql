@@ -152,15 +152,6 @@ CREATE TABLE PurchasedMovies
     clientid      VARCHAR2(15 CHAR) ,
     TITLE         VARCHAR2(100 CHAR) ,
     purchase_date DATE ,
-    --purchase type?
-
-    --fecha dentro del contrato, no fuera del periodo de facturacion actual (mes)
-    -- una purchase existente no se puede borrar ni updatear
-    -- esto se hara con un trigger, pero lo podemos mirar guarro de momento? aunque sea redundante
-    startdate     DATE NOT NULL ,
-    enddate       DATE ,
-    --no vamos a llenar la tabla porque no podemos
-
     CONSTRAINT PK_PurchasedMovies PRIMARY KEY (clientid, TITLE, purchase_date) ,
     CONSTRAINT FK_PurchasedMovies1 FOREIGN KEY (TITLE) REFERENCES Movies(MOVIE_TITLE) ,
     CONSTRAINT FK_PurchasedMovies2 FOREIGN KEY (clientid) REFERENCES Clients(clientid)
@@ -171,7 +162,8 @@ CREATE TABLE PurchasedTVSeries
     clientid      VARCHAR2(15 CHAR) ,
     TITLE         VARCHAR2(100 CHAR) ,
     purchase_date DATE ,
-    --purchase type?
+    SEASON        NUMBER(2) ,
+    EPISODES      NUMBER(3) ,
     CONSTRAINT PK_PurchasedTVSeries PRIMARY KEY (clientid, TITLE, purchase_date) ,
     CONSTRAINT FK_PurchasedTVSeries1 FOREIGN KEY (TITLE) REFERENCES TVSeries(TITLE) ,
     CONSTRAINT FK_PurchasedTVSeries2 FOREIGN KEY (clientid) REFERENCES Clients(clientid)
@@ -181,6 +173,7 @@ CREATE TABLE MovieLicenses
   (
     clientid      VARCHAR2(15 CHAR) ,
     TITLE         VARCHAR2(100 CHAR) ,
+    purchase_date DATE NOT NULL ,
     CONSTRAINT FK_MovieLicenses1 FOREIGN KEY (TITLE) REFERENCES Movies(MOVIE_TITLE) ,
     CONSTRAINT FK_MovieLicenses2 FOREIGN KEY (clientid) REFERENCES Clients(clientid)
   );
@@ -189,6 +182,7 @@ CREATE TABLE TVSeriesLicenses
   (
     clientid      VARCHAR2(15 CHAR) ,
     TITLE         VARCHAR2(100 CHAR) ,
+    purchase_date DATE NOT NULL ,
     CONSTRAINT FK_TVSeriesLicenses1 FOREIGN KEY (TITLE) REFERENCES TVSeries(TITLE) ,
     CONSTRAINT FK_TVSeriesLicenses2 FOREIGN KEY (clientid) REFERENCES Clients(clientid)
   );
