@@ -137,7 +137,7 @@ CREATE TABLE TapsTV
 
 CREATE TABLE TapsMovies
   (
-    CLIENT   VARCHAR2(15 CHAR) NOT NULL,
+    CLIENT   VARCHAR2(15 CHAR) ,
     TITLE    VARCHAR2(100 CHAR) ,
     VIEWDATE DATE ,
     VIEWPCT  NUMBER(3) NOT NULL ,
@@ -149,12 +149,32 @@ CREATE TABLE TapsMovies
 
 CREATE TABLE PurchasedMovies
   (
+    clientid      VARCHAR2(15 CHAR) ,
+    TITLE         VARCHAR2(100 CHAR) ,
+    purchase_date DATE ,
+    --purchase type?
 
+    --fecha dentro del contrato, no fuera del periodo de facturacion actual (mes)
+    -- una purchase existente no se puede borrar ni updatear
+    -- esto se hara con un trigger, pero lo podemos mirar guarro de momento? aunque sea redundante
+    startdate     DATE NOT NULL ,
+    enddate       DATE ,
+    --no vamos a llenar la tabla porque no podemos
+    
+    CONSTRAINT PK_PurchasedMovies PRIMARY KEY (clientid, TITLE, purchase_date) ,
+    CONSTRAINT FK_PurchasedMovies1 FOREIGN KEY (TITLE) REFERENCES Movies(MOVIE_TITLE) ,
+    CONSTRAINT FK_PurchasedMovies2 FOREIGN KEY (clientid) REFERENCES Clients(clientid)
   );
 
 CREATE TABLE PurchasedTVSeries
   (
-
+    clientid      VARCHAR2(15 CHAR) ,
+    TITLE         VARCHAR2(100 CHAR) ,
+    purchase_date DATE ,
+    --purchase type?
+    CONSTRAINT PK_PurchasedTVSeries PRIMARY KEY (clientid, TITLE, purchase_date) ,
+    CONSTRAINT FK_PurchasedTVSeries1 FOREIGN KEY (TITLE) REFERENCES Movies(MOVIE_TITLE) ,
+    CONSTRAINT FK_PurchasedTVSeries2 FOREIGN KEY (clientid) REFERENCES Clients(clientid)
   );
 
 CREATE TABLE MovieLicenses
@@ -166,3 +186,10 @@ CREATE TABLE TVSeriesLicenses
   (
 
   );
+
+--genero: en el ñroximo assignment va a haber que separar los generos, de momento nos la pela
+--contracts: vamos a hacer la view del demonio
+--545342 en OLD_TAPS
+--230929 en tvTaps
+--313474 en movietaps
+--544403 en total (939 menos)
