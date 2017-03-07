@@ -52,6 +52,8 @@ CREATE TABLE Contracts
     CONSTRAINT CK_contracts CHECK (startdate < enddate)
   ) ;
 
+CREATE VIEW EFFECTIVE_CONTRACTS AS SELECT * FROM CONTRACTS WHERE enddate>=SYSDATE;
+
 CREATE TABLE Movies
   (
    COLOR                      VARCHAR2(100 CHAR) ,
