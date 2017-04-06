@@ -31,9 +31,38 @@ GROUP BY LIC_SERIES.CLIENT, LIC_SERIES.TITLE, LIC_SERIES.SEASON, SEASONS.EPISODE
 HAVING COUNT(EPISODE)=SEASONS.EPISODES;
 
 -- 4
-SELECT DISTINCT COUNT(TAPS_MOVIES.TITLE), TO_CHAR(VIEW_DATETIME, 'MON-YYYY')
-FROM TAPS_MOVIES
-JOIN MOVIES ON TAPS_MOVIES.TITLE=MOVIES.MOVIE_TITLE
-JOIN CASTS ON MOVIES.MOVIE_TITLE=CASTS.TITLE
-GROUP BY TO_CHAR(VIEW_DATETIME, 'MON-YYYY')
-ORDER BY TO_DATE(TO_CHAR(VIEW_DATETIME, 'MON-YYYY'), 'MON-YYYY');
+SELECT A.month, ACTOR, A.top
+FROM (
+		SELECT MAX(counter) as top, month
+		FROM (
+			SELECT TO_CHAR(VIEW_DATETIME, 'MON-YYYY') AS month, ACTOR, COUNT(TAPS_MOVIES.TITLE) AS counter
+			FROM TAPS_MOVIES
+			JOIN CASTS ON TAPS_MOVIES.TITLE=CASTS.TITLE
+			GROUP BY TO_CHAR(VIEW_DATETIME, 'MON-YYYY'), ACTOR
+		)
+			GROUP BY month
+			ORDER BY TO_DATE(month, 'MON-YYYY')
+) A
+JOIN
+(
+	SELECT TO_CHAR(VIEW_DATETIME, 'MON-YYYY') AS month, ACTOR, COUNT(TAPS_MOVIES.TITLE) AS counter
+	FROM TAPS_MOVIES
+	JOIN CASTS ON TAPS_MOVIES.TITLE=CASTS.TITLE
+	GROUP BY TO_CHAR(VIEW_DATETIME, 'MON-YYYY'), ACTOR
+) B
+ON A.top=B.counter AND A.month=B.month
+ORDER BY TO_DATE(month, 'MON-YYYY');
+--MONTH    ACTOR                                                     TOP
+---------- -------------------------------------------------- ----------
+--ENE-2016 Robert De Niro                                            188
+--FEB-2016 Robert De Niro                                            177
+--MAR-2016 Robert De Niro                                            194
+--ABR-2016 Robert De Niro                                            202
+--MAY-2016 Robert De Niro                                            200
+--JUN-2016 Robert De Niro                                            205
+--JUL-2016 Robert De Niro                                            197
+--AGO-2016 Robert De Niro                                            206
+--SEP-2016 Robert De Niro                                            228
+--OCT-2016 Robert De Niro                                            228
+--NOV-2016 Robert De Niro                                            222
+--DIC-2016 Morgan Freeman                                            230
