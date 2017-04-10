@@ -31,6 +31,67 @@ CREATE VIEW bacala AS
 -- f) Pigeonholed: stars with more than half of their movies (at least three) in
 -- a given genre; in case of several matching genres, provide all/the most frequent
 CREATE VIEW pigeonholed AS
+SELECT ACTOR, GENRE
+FROM (
+  SELECT MAX(film_number_genre) AS top
+  FROM (
+    SELECT ACTOR, GENRE, COUNT(MOVIE_TITLE) AS film_number_genre
+    FROM MOVIES
+    JOIN CASTS ON CASTS.TITLE=MOVIE_TITLE
+    JOIN GENRES_MOVIES ON GENRES_MOVIES.TITLE=MOVIE_TITLE
+    GROUP BY ACTOR, GENRE HAVING COUNT(MOVIE_TITLE)>=3
+  )
+)A JOIN (SELECT ACTOR, GENRE, COUNT(MOVIE_TITLE) AS film_number_genre
+          FROM MOVIES
+          JOIN CASTS ON CASTS.TITLE=MOVIE_TITLE
+          JOIN GENRES_MOVIES ON GENRES_MOVIES.TITLE=MOVIE_TITLE
+          GROUP BY ACTOR, GENRE HAVING COUNT(MOVIE_TITLE)>=3) B
+ON A.top=B.film_number_genre
+
+
+
+
+
+
+
+SELECT B.GENRE, ACTOR, A.top
+FROM (
+		SELECT MAX(counter) as top
+		FROM (
+			SELECT GENRE, ACTOR, COUNT(MOVIE_TITLE) AS counter
+			FROM MOVIES
+			JOIN CASTS ON MOVIES.MOVIE_TITLE=CASTS.TITLE
+      JOIN GENRES_MOVIES ON MOVIES.MOVIE_TITLE=GENRES_MOVIES.TITLE
+			GROUP BY GENRE, ACTOR
+		)
+) A
+JOIN
+(
+	SELECT GENRE, ACTOR, COUNT(MOVIE_TITLE) AS counter
+	FROM MOVIES
+	JOIN CASTS ON MOVIES.MOVIE_TITLE=CASTS.TITLE
+  JOIN GENRES_MOVIES ON MOVIES.MOVIE_TITLE=GENRES_MOVIES.TITLE
+  GROUP BY GENRE, ACTOR
+) B
+ON A.top=B.counter
+ORDER BY ACTOR
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 -- g) All_movies: design a view with the same definition of the original old_movies.
 -- Todo VARCHAR2(100) excepto PLOT_KEYWORDS que es VARCHAR2(150)
