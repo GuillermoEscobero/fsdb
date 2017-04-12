@@ -27,6 +27,15 @@ CREATE OR REPLACE VIEW top_content AS
 -- e) Bacalá: top 5 movies dropped (stop viewing) after visualizing more than
 -- half of its duration (viewing 97% or more is taken as complete visualization).
 CREATE OR REPLACE VIEW bacala AS
+SELECT * FROM
+(
+  SELECT TITLE
+  FROM TAPS_MOVIES
+  WHERE PCT BETWEEN 51 AND 96
+  GROUP BY TITLE
+  ORDER BY COUNT(TAPS_MOVIES.TITLE) DESC
+)
+WHERE ROWNUM<=5;
 
 -- f) Pigeonholed: stars with more than half of their movies (at least three) in
 -- a given genre; in case of several matching genres, provide all/the most frequent
@@ -54,9 +63,6 @@ JOIN
 ON A.top=B.counter AND A.ACTOR=B.ACTOR
 WHERE top>=(SELECT COUNT(TITLE)/2 FROM CASTS GROUP BY ACTOR HAVING ACTOR=A.ACTOR)
 ORDER BY TOP DESC;
-
-
-
 
 
 -- g) All_movies: design a view with the same definition of the original old_movies.

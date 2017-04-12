@@ -1,11 +1,12 @@
 -- Bill a given month/year to a given customer with a given product;
 -- Returns NUMBER (6.2).
-CREATE OR REPLACE FUNCTION bill(
-  date_bill IN DATE,
-  client IN VARCHAR2(XXX),
-  product IN VARCHAR2(XXX))
-  RETURN NUMBER
-  IS total NUMBER(6,2);
+CREATE OR REPLACE FUNCTION bill RETURN NUMBER
+IS
+    date_bill IN DATE,
+    client IN VARCHAR2(XXX),
+    product IN VARCHAR2(XXX))
+    RETURN NUMBER
+    IS total NUMBER(6,2);
   BEGIN
     SELECT FEE
     INTO total
@@ -17,3 +18,4 @@ CREATE OR REPLACE FUNCTION bill(
     AND (product=CONTRACTS.CONTRACT_TYPE);
     RETURN(total);
   END;
+  /
