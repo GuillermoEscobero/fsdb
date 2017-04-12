@@ -83,7 +83,7 @@ JOIN
   GROUP BY GENRE, ACTOR
 ) B
 ON A.top=B.counter
-ORDER BY ACTOR
+ORDER BY ACTOR;
 
 
 
