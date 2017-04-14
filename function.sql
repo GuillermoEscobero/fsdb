@@ -18,4 +18,3 @@ IS
     AND (product=CONTRACTS.CONTRACT_TYPE);
     RETURN(total);
   END;
-  /
