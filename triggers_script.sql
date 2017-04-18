@@ -10,11 +10,10 @@ CREATE OR REPLACE TRIGGER NON_VALID_TAP_MOVIES
 BEFORE INSERT ON taps_movies
 FOR EACH ROW
   DECLARE
-    contractid VARCHAR2(10 CHAR);
     startdate DATE;
     enddate DATE;
   BEGIN
-    SELECT contractid, startdate, enddate INTO contractid, startdate, enddate
+    SELECT startdate, enddate INTO startdate, enddate
     FROM contracts
     WHERE contractid = :NEW.contractid;
     IF NOT ((:NEW.view_datetime BETWEEN startdate AND enddate)
@@ -27,11 +26,10 @@ CREATE OR REPLACE TRIGGER NON_VALID_TAP_SERIES
 BEFORE INSERT ON taps_series
 FOR EACH ROW
   DECLARE
-    contractid VARCHAR2(10 CHAR);
     startdate DATE;
     enddate DATE;
   BEGIN
-    SELECT contractid, startdate, enddate INTO contractid, startdate, enddate
+    SELECT startdate, enddate INTO startdate, enddate
     FROM contracts
     WHERE contractid = :NEW.contractid;
     IF NOT ((:NEW.view_datetime BETWEEN startdate AND enddate)
