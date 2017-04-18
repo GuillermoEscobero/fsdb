@@ -44,8 +44,6 @@ ORDER BY top DESC;
 
 
 -- g) All_movies: design a view with the same definition of the original old_movies.
--- TODO: Todo VARCHAR2(100) excepto PLOT_KEYWORDS que es VARCHAR2(150)
--- TODO: Pasar de C Y BN a Color y whiteblack como en fsdb.old_movies
 CREATE OR REPLACE VIEW all_movies AS
 SELECT CASE WHEN color='B' THEN 'Black and White' WHEN color='C' THEN 'Color' ELSE null END,
 director_name, num_critic_for_reviews, duration, director_facebook_likes,
@@ -55,7 +53,7 @@ filming_language, country, content_rating, budget, imdb_score, aspect_ratio, mov
 genres, actor_1_name, actor_1_facebook_likes, actor_2_name, actor_2_facebook_likes, actor_3_name, actor_3_facebook_likes
 FROM movies
 LEFT OUTER JOIN (SELECT title, keyword AS plot_keywords FROM keywords_movies) A ON movie_title=A.title
-LEFT OUTER JOIN (SELECT title, genre AS genres FROM genres_movies) B on movie_title=B.title
+LEFT OUTER JOIN (SELECT title, genre AS genres FROM genres_movies) B ON movie_title=B.title
 LEFT OUTER JOIN (SELECT title, actor_1_name, actor_1_facebook_likes, actor_2_name, actor_2_facebook_likes, actor_3_name, actor_3_facebook_likes
                  FROM (
                   (SELECT title, SUBSTR((LISTAGG(actor, '|') WITHIN GROUP (ORDER BY actor)), 1, INSTR((LISTAGG(actor, '|') WITHIN GROUP (ORDER BY actor)), '|')-1) AS actor_1_name,
