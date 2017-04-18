@@ -9,68 +9,69 @@
 CREATE OR REPLACE VIEW bacala AS
 SELECT * FROM
 (
-  SELECT TITLE
-  FROM TAPS_MOVIES
-  WHERE PCT BETWEEN 51 AND 96
-  GROUP BY TITLE
-  ORDER BY COUNT(TITLE) DESC
+  SELECT title
+  FROM taps_movies
+  WHERE pct BETWEEN 51 AND 96
+  GROUP BY title
+  ORDER BY COUNT(title) DESC
 )
 WHERE ROWNUM<=5;
 
 -- f) Pigeonholed: stars with more than half of their movies (at least three) in
 -- a given genre; in case of several matching genres, provide all/the most frequent
 CREATE OR REPLACE VIEW pigeonholed AS
-SELECT A.ACTOR, GENRE, top
+SELECT A.actor, genre, top
 FROM (
-		SELECT MAX(counter) as top, ACTOR
+		SELECT MAX(counter) as top, actor
 		FROM (
-			SELECT GENRE, ACTOR, COUNT(TITLE) AS counter
-			FROM CASTS
-      NATURAL JOIN GENRES_MOVIES
-			GROUP BY GENRE, ACTOR HAVING COUNT(TITLE)>=3
+			SELECT genre, actor, COUNT(title) AS counter
+			FROM casts
+      NATURAL JOIN genres_movies
+			GROUP BY genre, actor HAVING COUNT(title)>=3
 		)
-    GROUP BY ACTOR
+    GROUP BY actor
 ) A
 JOIN
 (
-	SELECT GENRE, ACTOR, COUNT(TITLE) AS counter
-	FROM CASTS
-  NATURAL JOIN GENRES_MOVIES
-  GROUP BY GENRE, ACTOR HAVING COUNT(TITLE)>=3
+	SELECT genre, actor, COUNT(title) AS counter
+  FROM casts
+  NATURAL JOIN genres_movies
+  GROUP BY genre, actor HAVING COUNT(title)>=3
 ) B
-ON top=counter AND A.ACTOR=B.ACTOR
-WHERE top>=(SELECT COUNT(TITLE)/2 FROM CASTS GROUP BY ACTOR HAVING ACTOR=A.ACTOR)
-ORDER BY TOP DESC;
+ON top=counter AND A.actor=B.actor
+WHERE top>=(SELECT COUNT(title)/2 FROM casts GROUP BY actor HAVING actor=A.actor)
+ORDER BY top DESC;
 
 
 -- g) All_movies: design a view with the same definition of the original old_movies.
 -- TODO: Todo VARCHAR2(100) excepto PLOT_KEYWORDS que es VARCHAR2(150)
 -- TODO: Pasar de C Y BN a Color y whiteblack como en fsdb.old_movies
 CREATE OR REPLACE VIEW all_movies AS
-SELECT COLOR, DIRECTOR_NAME, NUM_CRITIC_FOR_REVIEWS, DURATION, DIRECTOR_FACEBOOK_LIKES,
-GROSS, MOVIE_TITLE, NUM_VOTED_USERS, CAST_TOTAL_FACEBOOK_LIKES,
-FACENUMBER_IN_POSTER, MOVIE_IMDB_LINK, NUM_USER_FOR_REVIEWS,
-FILMING_LANGUAGE, COUNTRY, CONTENT_RATING, BUDGET, IMDB_SCORE, ASPECT_RATIO, MOVIE_FACEBOOK_LIKES ,PLOT_KEYWORDS,
-GENRES, ACTOR_1_NAME, ACTOR_1_FACEBOOK_LIKES, ACTOR_2_NAME, ACTOR_2_FACEBOOK_LIKES, ACTOR_3_NAME, ACTOR_3_FACEBOOK_LIKES
-FROM MOVIES
-LEFT OUTER JOIN (SELECT TITLE, KEYWORD AS PLOT_KEYWORDS FROM KEYWORDS_MOVIES) A ON MOVIE_TITLE=A.TITLE
-LEFT OUTER JOIN (SELECT TITLE, GENRE AS GENRES FROM GENRES_MOVIES) B ON MOVIE_TITLE=B.TITLE
-LEFT OUTER JOIN (SELECT TITLE, ACTOR_1_NAME, ACTOR_1_FACEBOOK_LIKES, ACTOR_2_NAME, ACTOR_2_FACEBOOK_LIKES, ACTOR_3_NAME, ACTOR_3_FACEBOOK_LIKES
+SELECT CASE WHEN color='B' THEN 'Black and White' WHEN color='C' THEN 'Color' ELSE null END,
+director_name, num_critic_for_reviews, duration, director_facebook_likes,
+gross, movie_title, num_voted_users, cast_total_facebook_likes,
+facenumber_in_poster, movie_imdb_link, num_user_for_reviews,
+filming_language, country, content_rating, budget, imdb_score, aspect_ratio, movie_facebook_likes ,plot_keywords,
+genres, actor_1_name, actor_1_facebook_likes, actor_2_name, actor_2_facebook_likes, actor_3_name, actor_3_facebook_likes
+FROM movies
+LEFT OUTER JOIN (SELECT title, keyword AS plot_keywords FROM keywords_movies) A ON movie_title=A.title
+LEFT OUTER JOIN (SELECT title, genre AS genres FROM genres_movies) B on movie_title=B.title
+LEFT OUTER JOIN (SELECT title, actor_1_name, actor_1_facebook_likes, actor_2_name, actor_2_facebook_likes, actor_3_name, actor_3_facebook_likes
                  FROM (
-                  (SELECT TITLE, SUBSTR((LISTAGG(ACTOR, '|') WITHIN GROUP (ORDER BY ACTOR)), 1, INSTR((LISTAGG(ACTOR, '|') WITHIN GROUP (ORDER BY ACTOR)), '|')-1) AS ACTOR_1_NAME,
-                  SUBSTR((LISTAGG(ACTOR, '|') WITHIN GROUP (ORDER BY ACTOR)), INSTR((LISTAGG(ACTOR, '|') WITHIN GROUP (ORDER BY ACTOR)), '|')+1,
-                  INSTR((LISTAGG(ACTOR, '|') WITHIN GROUP (ORDER BY ACTOR)), '|', 1, 2) - INSTR((LISTAGG(ACTOR, '|') WITHIN GROUP (ORDER BY ACTOR)), '|')-1) AS ACTOR_2_NAME,
-                  SUBSTR((LISTAGG(ACTOR, '|') WITHIN GROUP (ORDER BY ACTOR)), INSTR((LISTAGG(ACTOR, '|') WITHIN GROUP (ORDER BY ACTOR)), '|', -1, 1)+1) AS ACTOR_3_NAME
-                  FROM CASTS
-                  GROUP BY TITLE)
+                  (SELECT title, SUBSTR((LISTAGG(actor, '|') WITHIN GROUP (ORDER BY actor)), 1, INSTR((LISTAGG(actor, '|') WITHIN GROUP (ORDER BY actor)), '|')-1) AS actor_1_name,
+                  SUBSTR((LISTAGG(actor, '|') WITHIN GROUP (ORDER BY actor)), INSTR((LISTAGG(actor, '|') WITHIN GROUP (ORDER BY actor)), '|')+1,
+                  instr((LISTAGG(actor, '|') WITHIN GROUP (ORDER BY actor)), '|', 1, 2) - INSTR((LISTAGG(actor, '|') WITHIN GROUP (ORDER BY actor)), '|')-1) AS actor_2_name,
+                  SUBSTR((LISTAGG(actor, '|') WITHIN GROUP (ORDER BY actor)), INSTR((LISTAGG(actor, '|') WITHIN GROUP (ORDER BY actor)), '|', -1, 1)+1) AS actor_3_name
+                  FROM casts
+                  GROUP BY title)
                   LEFT OUTER JOIN
-                    (SELECT ACTOR_NAME, FACEBOOK_LIKES AS ACTOR_1_FACEBOOK_LIKES FROM PLAYERS) D
-                  ON ACTOR_1_NAME=D.ACTOR_NAME
+                    (SELECT actor_name, facebook_likes AS actor_1_facebook_likes FROM players) D
+                  ON actor_1_name=D.actor_name
                   LEFT OUTER JOIN
-                    (SELECT ACTOR_NAME, FACEBOOK_LIKES AS ACTOR_2_FACEBOOK_LIKES FROM PLAYERS) E
-                  ON ACTOR_2_NAME=E.ACTOR_NAME
+                    (SELECT actor_name, facebook_likes AS actor_2_facebook_likes FROM players) E
+                  ON actor_2_name=E.actor_name
                   LEFT OUTER JOIN
-                    (SELECT ACTOR_NAME, FACEBOOK_LIKES AS ACTOR_3_FACEBOOK_LIKES FROM PLAYERS) F
-                  ON ACTOR_3_NAME=F.ACTOR_NAME
+                    (SELECT actor_name, facebook_likes AS actor_3_facebook_likes FROM players) F
+                  ON actor_3_name=F.actor_name
                  )
-               ) C ON MOVIE_TITLE=C.TITLE;
+               ) C ON movie_title=C.title;
