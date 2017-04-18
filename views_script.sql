@@ -60,7 +60,7 @@ LEFT OUTER JOIN (SELECT title, actor_1_name, actor_1_facebook_likes, actor_2_nam
                  FROM (
                   (SELECT title, SUBSTR((LISTAGG(actor, '|') WITHIN GROUP (ORDER BY actor)), 1, INSTR((LISTAGG(actor, '|') WITHIN GROUP (ORDER BY actor)), '|')-1) AS actor_1_name,
                   SUBSTR((LISTAGG(actor, '|') WITHIN GROUP (ORDER BY actor)), INSTR((LISTAGG(actor, '|') WITHIN GROUP (ORDER BY actor)), '|')+1,
-                  instr((LISTAGG(actor, '|') WITHIN GROUP (ORDER BY actor)), '|', 1, 2) - INSTR((LISTAGG(actor, '|') WITHIN GROUP (ORDER BY actor)), '|')-1) AS actor_2_name,
+                  INSTR((LISTAGG(actor, '|') WITHIN GROUP (ORDER BY actor)), '|', 1, 2) - INSTR((LISTAGG(actor, '|') WITHIN GROUP (ORDER BY actor)), '|')-1) AS actor_2_name,
                   SUBSTR((LISTAGG(actor, '|') WITHIN GROUP (ORDER BY actor)), INSTR((LISTAGG(actor, '|') WITHIN GROUP (ORDER BY actor)), '|', -1, 1)+1) AS actor_3_name
                   FROM casts
                   GROUP BY title)
