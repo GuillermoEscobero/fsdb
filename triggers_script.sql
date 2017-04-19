@@ -16,9 +16,10 @@ FOR EACH ROW
     SELECT startdate, enddate INTO startdate, enddate
     FROM contracts
     WHERE contractid = :NEW.contractid;
-    IF NOT ((:NEW.view_datetime BETWEEN startdate AND enddate)
-      OR (enddate IS NULL AND startdate<=:NEW.view_datetime)) THEN
-        RAISE_APPLICATION_ERROR(-20001, 'Tap date out of contract');
+    IF NOT (((:NEW.view_datetime BETWEEN startdate AND enddate)
+      OR (enddate IS NULL AND startdate<=:NEW.view_datetime))
+      AND (:NEW.view_datetime<=SYSDATE)) THEN
+        RAISE_APPLICATION_ERROR(-20001, 'NON VALID TAP');
     END IF;
   END;
 
@@ -32,9 +33,10 @@ FOR EACH ROW
     SELECT startdate, enddate INTO startdate, enddate
     FROM contracts
     WHERE contractid = :NEW.contractid;
-    IF NOT ((:NEW.view_datetime BETWEEN startdate AND enddate)
-      OR (enddate IS NULL AND startdate<=:NEW.view_datetime)) THEN
-        RAISE_APPLICATION_ERROR(-20001, 'Tap date out of contract');
+    IF NOT (((:NEW.view_datetime BETWEEN startdate AND enddate)
+      OR (enddate IS NULL AND startdate<=:NEW.view_datetime))
+      AND (:NEW.view_datetime<=SYSDATE)) THEN
+        RAISE_APPLICATION_ERROR(-20001, 'NON VALID TAP');
     END IF;
   END;
 
