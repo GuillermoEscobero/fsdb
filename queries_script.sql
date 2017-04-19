@@ -13,7 +13,7 @@ NATURAL JOIN contracts
 JOIN products ON contract_type=product_name
 WHERE (SYSDATE BETWEEN startdate AND enddate)
 OR (enddate IS NULL AND startdate<=SYSDATE)
-ORDER BY surname, name;
+ORDER BY lower(surname), lower(name);
 -- 4323 rows (at 17/4/2017)
 
 
@@ -26,12 +26,13 @@ WHERE country='USA'
 GROUP BY actor
 ORDER BY COUNT(title) DESC
 ) WHERE ROWNUM<=5;
--- Robert De Niro	45
--- Morgan Freeman	36
--- Bruce Willis		35
--- Matt Damon		  35
--- Steve Buscemi	33
-
+-- ACTOR						   COUNT(TITLE)
+-- --------------------------------
+-- Robert De Niro						45
+-- Morgan Freeman						36
+-- Bruce Willis						  35
+-- Matt Damon						    35
+-- Steve Buscemi						33
 
 -- c) Clients who have bought license for a complete season of any TVseries
 -- (include the title and season).
@@ -66,17 +67,17 @@ JOIN
 ) B
 ON top=counter AND A.month=B.month
 ORDER BY TO_DATE(month, 'MON-YYYY');
--- MONTH    ACTOR                                                     TOP
----------- -------------------------------------------------- -----------
--- ENE-2016 Robert De Niro                                            188
--- FEB-2016 Robert De Niro                                            177
--- MAR-2016 Robert De Niro                                            194
--- ABR-2016 Robert De Niro                                            202
--- MAY-2016 Robert De Niro                                            200
--- JUN-2016 Robert De Niro                                            205
--- JUL-2016 Robert De Niro                                            197
--- AGO-2016 Robert De Niro                                            206
--- SEP-2016 Robert De Niro                                            228
--- OCT-2016 Robert De Niro                                            228
--- NOV-2016 Robert De Niro                                            222
--- DIC-2016 Morgan Freeman                                            230
+-- MONTH    ACTOR                     TOP
+---------- ------------------ -----------
+-- ENE-2016 Robert De Niro            188
+-- FEB-2016 Robert De Niro            177
+-- MAR-2016 Robert De Niro            194
+-- ABR-2016 Robert De Niro            202
+-- MAY-2016 Robert De Niro            200
+-- JUN-2016 Robert De Niro            205
+-- JUL-2016 Robert De Niro            197
+-- AGO-2016 Robert De Niro            206
+-- SEP-2016 Robert De Niro            228
+-- OCT-2016 Robert De Niro            228
+-- NOV-2016 Robert De Niro            222
+-- DIC-2016 Morgan Freeman            230
