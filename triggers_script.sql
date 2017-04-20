@@ -39,11 +39,3 @@ FOR EACH ROW
         RAISE_APPLICATION_ERROR(-20001, 'NON VALID TAP');
     END IF;
   END;
-
------ Tests --------------------------------------------------------------------
--- INSERT INTO TAPS_MOVIES values('FJ95311/14', TO_DATE('2016-05-08','YYYY-MM-DD'), 132, 'Inception');
--- INSERT INTO TAPS_MOVIES values('FJ95311/14', TO_DATE('2018-05-08','YYYY-MM-DD'), 132, 'Inception');
--- INSERT INTO TAPS_MOVIES values('FJ95311/14', TO_DATE('2016-05-08','YYYY-MM-DD'), 132, 'Inceptionn');
-
--- DELETE FROM TAPS_MOVIES WHERE CONTRACTID='FJ95311/14' AND PCT=132 AND TITLE='Inception';
---------------------------------------------------------------------------------
