@@ -76,3 +76,4 @@ LEFT OUTER JOIN (SELECT title, actor_1_name, actor_1_facebook_likes, actor_2_nam
                   ON actor_3_name=F.actor_name
                  )
                ) C ON movie_title=C.title;
+-- 4914 rows
