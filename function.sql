@@ -25,8 +25,7 @@ IS
       PPM,
       PPD,
       PCT,
-      DATETIME AS PURCHASE_DATETIME,
-      CONTRACT_STARTDATE
+      DATETIME AS PURCHASE_DATETIME
     FROM
       (
         SELECT
@@ -41,8 +40,7 @@ IS
           PPM,
           PPD,
           PCT,
-          TITLE    AS MOVIE_TITLE,
-          CONTRACT_STARTDATE
+          TITLE    AS MOVIE_TITLE
         FROM
           (
             SELECT
@@ -56,8 +54,7 @@ IS
               TAP_COST AS PP,
               PPM,
               PPD,
-              PCT,
-              CONTRACT_STARTDATE
+              PCT
             FROM
               (
                 SELECT
@@ -66,8 +63,7 @@ IS
                   TITLE,
                   CONTRACT_TYPE,
                   VIEW_DATETIME,
-                  PCT,
-                  STARTDATE AS CONTRACT_STARTDATE
+                  PCT
                 FROM
                   (
                     SELECT
@@ -313,6 +309,11 @@ IS
          TO_DATE(TO_CHAR(END_DATE_OF_PROMOTION, 'MON-YYYY'), 'MON-YYYY'))
       THEN
         TOTAL_PRICE := TOTAL_PRICE - CLIENTID.PROMO / 100 * TOTAL_PRICE;
+      END IF;
+      IF TO_DATE(PERIOD_TO_BILL, 'MON-YYYY') NOT BETWEEN TO_DATE(TO_CHAR(CLIENTID.STARTDATE, 'MON-YYYY'), 'MON-YYYY') AND
+         TO_DATE(TO_CHAR(CLIENTID.ENDDATE, 'MON-YYYY'), 'MON-YYYY')
+      THEN
+        TOTAL_PRICE := -1;
       END IF;
     END LOOP;
 
