@@ -45,12 +45,13 @@ ORDER BY top DESC;
 
 -- g) All_movies: design a view with the same definition of the original old_movies.
 CREATE OR REPLACE VIEW all_movies AS
-SELECT CASE WHEN color='B' THEN 'Black and White' WHEN color='C' THEN 'Color' ELSE null END,
+SELECT CASE color WHEN 'B' THEN 'Black and White' WHEN 'C' THEN 'Color' END AS color,
 director_name, num_critic_for_reviews, duration, director_facebook_likes,
-gross, movie_title, num_voted_users, cast_total_facebook_likes,
-facenumber_in_poster, movie_imdb_link, num_user_for_reviews,
-filming_language, country, content_rating, budget, imdb_score, aspect_ratio, movie_facebook_likes ,plot_keywords,
-genres, actor_1_name, actor_1_facebook_likes, actor_2_name, actor_2_facebook_likes, actor_3_name, actor_3_facebook_likes
+actor_3_facebook_likes, actor_2_name, actor_1_facebook_likes, gross, genres,
+actor_1_name, movie_title, num_voted_users, cast_total_facebook_likes,
+actor_3_name, facenumber_in_poster, plot_keywords, movie_imdb_link,
+num_user_for_reviews, filming_language, country, content_rating, budget,
+title_year, actor_2_facebook_likes, imdb_score, aspect_ratio, movie_facebook_likes
 FROM movies
 LEFT OUTER JOIN (SELECT title, keyword AS plot_keywords FROM keywords_movies) A ON movie_title=A.title
 LEFT OUTER JOIN (SELECT title, genre AS genres FROM genres_movies) B ON movie_title=B.title
