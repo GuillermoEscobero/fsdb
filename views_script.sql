@@ -43,6 +43,25 @@ WHERE top>=(SELECT COUNT(title)/2 FROM casts GROUP BY actor HAVING actor=A.actor
 ORDER BY top DESC;
 
 
+CREATE OR REPLACE VIEW pigeonholed AS
+WITH B AS (
+  SELECT genre, actor, COUNT(title) AS counter
+  FROM casts
+  NATURAL JOIN genres_movies
+  GROUP BY genre, actor HAVING COUNT(title)>=3
+)
+SELECT A.actor, genre, top
+FROM (
+		SELECT MAX(counter) as top, actor
+		FROM B
+    GROUP BY actor
+) A
+JOIN B
+ON top=counter AND A.actor=B.actor
+WHERE top>=(SELECT COUNT(title)/2 FROM casts GROUP BY actor HAVING actor=A.actor)
+ORDER BY top DESC;
+
+
 -- g) All_movies: design a view with the same definition of the original old_movies.
 CREATE OR REPLACE VIEW all_movies AS
 SELECT CASE color WHEN 'B' THEN 'Black and White' WHEN 'C' THEN 'Color' END AS color,
