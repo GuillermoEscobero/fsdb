@@ -47,24 +47,19 @@ HAVING COUNT(episode)=episodes;
 -- d) Top-Star: actor/actress who had got more taps (summing up all the taps of
 -- his/her movies) for each month (should retrieve a row for each month since
 -- the database is on duty).
-SELECT A.month, actor, top
-FROM (
-		SELECT MAX(counter) as top, month
-		FROM (
-			SELECT TO_CHAR(view_datetime, 'MON-YYYY') AS month, actor, COUNT(title) AS counter
-			FROM taps_movies
-			NATURAL JOIN casts
-			GROUP BY TO_CHAR(view_datetime, 'MON-YYYY'), actor
-		)
-		GROUP BY month
-) A
-JOIN
-(
+WITH B AS (
 	SELECT TO_CHAR(view_datetime, 'MON-YYYY') AS month, actor, COUNT(title) AS counter
 	FROM taps_movies
 	NATURAL JOIN casts
 	GROUP BY TO_CHAR(view_datetime, 'MON-YYYY'), actor
-) B
+)
+SELECT A.month, actor, top
+FROM (
+		SELECT MAX(counter) as top, month
+		FROM B
+		GROUP BY month
+) A
+JOIN B
 ON top=counter AND A.month=B.month
 ORDER BY TO_DATE(month, 'MON-YYYY');
 -- MONTH    ACTOR                     TOP
