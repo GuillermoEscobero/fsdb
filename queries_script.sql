@@ -41,7 +41,7 @@ FROM lic_series
 NATURAL JOIN seasons
 GROUP BY client, title, season, episodes
 HAVING COUNT(episode)=episodes;
--- 2104 rows
+-- 2097 rows
 
 
 -- d) Top-Star: actor/actress who had got more taps (summing up all the taps of
