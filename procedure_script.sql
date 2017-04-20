@@ -1,4 +1,9 @@
---PROCEDURE TO CALL THE FUNCTION
+-------------------------------------------------------------------------------
+-- procedure_script.sql
+-- 		Guillermo Escobero (100346060)
+-- 		Raul Olmedo Checa (100346073)
+-------------------------------------------------------------------------------
+
 CREATE OR REPLACE PROCEDURE BILL_ACTIVE_CONTRACTS(BILLING_DATE_INPUT VARCHAR2)
 IS
 

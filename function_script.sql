@@ -1,10 +1,16 @@
--- Bill a given month/year to a given customer with a given product;
+-------------------------------------------------------------------------------
+-- function_script.sql
+-- 		Guillermo Escobero (100346060)
+-- 		Raul Olmedo Checa (100346073)
+-------------------------------------------------------------------------------
+
+-- Bill a given month/year to a given customer with a given product.
 -- Returns NUMBER (6.2).
 
 CREATE OR REPLACE FUNCTION BILL(client_id VARCHAR2, PERIOD_TO_BILL VARCHAR2, product_type VARCHAR2)
   RETURN NUMBER
 IS
-  TOTAL_PRICE           NUMBER(6, 2); --coste total a cobrar(returning value)
+  TOTAL_PRICE           NUMBER(6, 2); -- Returning value
   COST_OF_MOVIES        NUMBER;
   COST_OF_SERIES        NUMBER;
   END_DATE_OF_PROMOTION DATE;
