@@ -16,6 +16,13 @@ SELECT * FROM
   ORDER BY COUNT(title) DESC
 )
 WHERE ROWNUM<=5;
+-- TITLE
+-- ---------------
+-- Big Fat Liar
+-- Dracula 2000
+-- My Soul to Take
+-- Evita
+-- Spy Kids
 
 -- f) Pigeonholed: stars with more than half of their movies (at least three) in
 -- a given genre; in case of several matching genres, provide all/the most frequent
