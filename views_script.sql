@@ -43,7 +43,7 @@ JOIN B
 ON top=counter AND A.actor=B.actor
 WHERE top>=(SELECT COUNT(title)/2 FROM casts GROUP BY actor HAVING actor=A.actor)
 ORDER BY top DESC;
-
+-- 37 rows
 
 -- g) All_movies: design a view with the same definition of the original old_movies.
 CREATE OR REPLACE VIEW all_movies AS
