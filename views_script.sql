@@ -20,30 +20,6 @@ WHERE ROWNUM<=5;
 -- f) Pigeonholed: stars with more than half of their movies (at least three) in
 -- a given genre; in case of several matching genres, provide all/the most frequent
 CREATE OR REPLACE VIEW pigeonholed AS
-SELECT A.actor, genre, top
-FROM (
-		SELECT MAX(counter) as top, actor
-		FROM (
-			SELECT genre, actor, COUNT(title) AS counter
-			FROM casts
-      NATURAL JOIN genres_movies
-			GROUP BY genre, actor HAVING COUNT(title)>=3
-		)
-    GROUP BY actor
-) A
-JOIN
-(
-	SELECT genre, actor, COUNT(title) AS counter
-  FROM casts
-  NATURAL JOIN genres_movies
-  GROUP BY genre, actor HAVING COUNT(title)>=3
-) B
-ON top=counter AND A.actor=B.actor
-WHERE top>=(SELECT COUNT(title)/2 FROM casts GROUP BY actor HAVING actor=A.actor)
-ORDER BY top DESC;
-
-
-CREATE OR REPLACE VIEW pigeonholed AS
 WITH B AS (
   SELECT genre, actor, COUNT(title) AS counter
   FROM casts
