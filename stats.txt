@@ -12,7 +12,7 @@ Estadísticas
           8  sorts (memory)
           0  sorts (disk)
        4229  rows processed
-       
+
 Statistics
 ----------------------------------------------------------
 	380  recursive calls
@@ -42,7 +42,7 @@ Estadísticas
           1  sorts (memory)
           0  sorts (disk)
           5  rows processed
-	  
+
 Statistics
 ----------------------------------------------------------
 	659  recursive calls
@@ -57,7 +57,7 @@ Statistics
 	  0  sorts (disk)
 	  5  rows processed
 
-		  
+
 QUERY 3
 Estadísticas
 ----------------------------------------------------------
@@ -72,7 +72,7 @@ Estadísticas
          12  sorts (memory)
           0  sorts (disk)
           5  rows processed
-		  
+
 QUERY 4
 Estadísticas
 ----------------------------------------------------------
@@ -87,4 +87,44 @@ Estadísticas
           7  sorts (memory)
           0  sorts (disk)
          12  rows processed
-		 
+
+
+------Raul's mierdas-------
+
+--Query 1--
+------------------------------------------------------------------------------------------
+| Id  | Operation	           | Name	     | Rows  | Bytes |TempSpc| Cost (%CPU)| Time	   |
+------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT     |		       |  4331 |   993K|	     |   317   (1)| 00:00:04 |
+|   1 |  SORT ORDER BY	     |		       |  4331 |   993K|  1096K|   317   (1)| 00:00:04 |
+|*  2 |   HASH JOIN	         |		       |  4331 |   993K|	     |    95   (3)| 00:00:02 |
+|*  3 |    HASH JOIN	       |		       |  4330 |   295K|	     |    72   (2)| 00:00:01 |
+|   4 |     TABLE ACCESS FULL| PRODUCTS  |     8 |   128 |	     |     3   (0)| 00:00:01 |
+|*  5 |     TABLE ACCESS FULL| CONTRACTS |  4330 |   228K|	     |    68   (0)| 00:00:01 |
+|   6 |    TABLE ACCESS FULL | CLIENTS	 |  5276 |   850K|	     |    22   (0)| 00:00:01 |
+------------------------------------------------------------------------------------------
+
+Predicate Information (identified by operation id):
+---------------------------------------------------
+
+   2 - access("CLIENTID"="C"."CLIENTID")
+   3 - access("CONTRACT_TYPE"="PRODUCT_NAME")
+   5 - filter("ENDDATE" IS NULL OR "ENDDATE">SYSDATE@!)
+
+Statistics
+----------------------------------------------------------
+	 34  recursive calls
+	  0  db block gets
+	375  consistent gets
+	238  physical reads
+	  0  redo size
+219041 bytes sent via SQL*Net to client
+ 3440  bytes received via SQL*Net from client
+	283  SQL*Net roundtrips to/from client
+	  1  sorts (memory)
+	  0  sorts (disk)
+       4229  rows processed
+
+TODO: las joins tienen un coste computacional alto en esta query
+Cuando hace el join con products, un index de bitmap (solo hay 8 tipos de contratos) vendria bien
+Un index simple para cuando hace (A.CONTRACT_TYPE=B.PRODUCT_NAME)?
