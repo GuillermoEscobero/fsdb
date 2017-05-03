@@ -1,5 +1,5 @@
 Query 1
-Estadísticas
+EstadÃ­sticas
 -----------------------------------------------------
         387  recursive calls
          56  db block gets
@@ -12,9 +12,24 @@ Estadísticas
           8  sorts (memory)
           0  sorts (disk)
        4229  rows processed
+       
+Statistics
+----------------------------------------------------------
+	380  recursive calls
+	 36  db block gets
+      15372  consistent gets
+       5076  physical reads
+	  0  redo size
+     219042  bytes sent via SQL*Net to client
+       3440  bytes received via SQL*Net from client
+	283  SQL*Net roundtrips to/from client
+	  6  sorts (memory)
+	  0  sorts (disk)
+       4229  rows processed
+
 
 QUERY 2
-Estadísticas
+EstadÃ­sticas
 ----------------------------------------------------------
           0  recursive calls
           0  db block gets
@@ -27,9 +42,24 @@ Estadísticas
           1  sorts (memory)
           0  sorts (disk)
           5  rows processed
+	  
+Statistics
+----------------------------------------------------------
+	659  recursive calls
+	  0  db block gets
+       5498  consistent gets
+       5059  physical reads
+	  0  redo size
+	503  bytes sent via SQL*Net to client
+	349  bytes received via SQL*Net from client
+	  2  SQL*Net roundtrips to/from client
+	 19  sorts (memory)
+	  0  sorts (disk)
+	  5  rows processed
+
 		  
 QUERY 3
-Estadísticas
+EstadÃ­sticas
 ----------------------------------------------------------
         501  recursive calls
          40  db block gets
@@ -44,7 +74,7 @@ Estadísticas
           5  rows processed
 		  
 QUERY 4
-Estadísticas
+EstadÃ­sticas
 ----------------------------------------------------------
         490  recursive calls
         339  db block gets
