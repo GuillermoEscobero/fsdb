@@ -1,0 +1,60 @@
+Query 1
+Estadísticas
+-----------------------------------------------------
+        387  recursive calls
+         56  db block gets
+        511  consistent gets
+        244  physical reads
+          0  redo size
+     219033  bytes sent via SQL*Net to client
+       3428  bytes received via SQL*Net from client
+        283  SQL*Net roundtrips to/from client
+          8  sorts (memory)
+          0  sorts (disk)
+       4229  rows processed
+
+QUERY 2
+Estadísticas
+----------------------------------------------------------
+          0  recursive calls
+          0  db block gets
+        190  consistent gets
+          0  physical reads
+          0  redo size
+        521  bytes sent via SQL*Net to client
+        338  bytes received via SQL*Net from client
+          2  SQL*Net roundtrips to/from client
+          1  sorts (memory)
+          0  sorts (disk)
+          5  rows processed
+		  
+QUERY 3
+Estadísticas
+----------------------------------------------------------
+        501  recursive calls
+         40  db block gets
+       1664  consistent gets
+       1213  physical reads
+          0  redo size
+        562  bytes sent via SQL*Net to client
+        338  bytes received via SQL*Net from client
+          2  SQL*Net roundtrips to/from client
+         12  sorts (memory)
+          0  sorts (disk)
+          5  rows processed
+		  
+QUERY 4
+Estadísticas
+----------------------------------------------------------
+        490  recursive calls
+        339  db block gets
+       2732  consistent gets
+       1950  physical reads
+       1604  redo size
+        710  bytes sent via SQL*Net to client
+        338  bytes received via SQL*Net from client
+          2  SQL*Net roundtrips to/from client
+          7  sorts (memory)
+          0  sorts (disk)
+         12  rows processed
+		 
