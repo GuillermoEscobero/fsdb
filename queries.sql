@@ -39,20 +39,93 @@ FROM (SELECT B.ACTOR, COUNT('X') USA_MOVIES
 WHERE ROWNUM<6;
 
 
+/*
+----------------------------------------------------------------------------------
+| Id  | Operation		            | Name	 | Rows  | Bytes | Cost (%CPU)| Time	   |
+----------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT	      |	       |     5 |   200 |    58   (7)| 00:00:01 |
+|*  1 |  COUNT STOPKEY		      |	       |	     |	     |	          | 	       |
+|   2 |   VIEW			            |	       | 11342 |   443K|    58   (7)| 00:00:01 |
+|*  3 |    SORT ORDER BY STOPKEY|	       | 11342 |  1606K|    58   (7)| 00:00:01 |
+|   4 |     HASH GROUP BY	      |	       | 11342 |  1606K|    58   (7)| 00:00:01 |
+|*  5 |      HASH JOIN		      |	       | 11342 |  1606K|    55   (2)| 00:00:01 |
+|*  6 |       TABLE ACCESS FULL | MOVIES |  3567 |   229K|    32   (0)| 00:00:01 |
+|   7 |       TABLE ACCESS FULL | CASTS  | 15612 |  1204K|    22   (0)| 00:00:01 |
+----------------------------------------------------------------------------------
+
+Predicate Information (identified by operation id):
+---------------------------------------------------
+
+   1 - filter(ROWNUM<6)
+   3 - filter(ROWNUM<6)
+   5 - access("MOVIE_TITLE"="B"."TITLE")
+   6 - filter("COUNTRY"='USA')
+
+Note
+-----
+   - dynamic sampling used for this statement (level=2)
 
 
-
+Statistics
+----------------------------------------------------------
+	  0  recursive calls
+	  0  db block gets
+	190  consistent gets
+	  0  physical reads
+	  0  redo size
+	503  bytes sent via SQL*Net to client
+	350  bytes received via SQL*Net from client
+	  2  SQL*Net roundtrips to/from client
+	  1  sorts (memory)
+	  0  sorts (disk)
+	  5  rows processed
+*/
 
 
 -- QUERY 3
-ELECT A.CLIENT, A.TITLE
+SELECT A.CLIENT, A.TITLE
    FROM (SELECT CLIENT,TITLE,COUNT('X') N_EPISODIOS FROM LIC_SERIES GROUP BY CLIENT,TITLE) A
         JOIN (SELECT TITLE, SUM(EPISODES) TOTAL_EP FROM SEASONS GROUP BY TITLE) B
         ON (A.TITLE=B.TITLE AND A.N_EPISODIOS=B.TOTAL_EP);
 
+/*
+---------------------------------------------------------------------------------
+| Id  | Operation	           | Name	      | Rows  | Bytes | Cost (%CPU)| Time	    |
+-----------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT     |		        |  1786 |   242K|   361   (5)| 00:00:05 |
+|*  1 |  HASH JOIN	         |		        |  1786 |   242K|   361   (5)| 00:00:05 |
+|   2 |   VIEW		           |		        |   750 | 48750 |	    4  (25)| 00:00:01 |
+|   3 |    HASH GROUP BY     |		        |   750 | 48750 |	    4  (25)| 00:00:01 |
+|   4 |     TABLE ACCESS FULL| SEASONS	  |   750 | 48750 |	    3   (0)| 00:00:01 |
+|   5 |   VIEW		           |		        |   178K|    12M|   355   (4)| 00:00:05 |
+|   6 |    HASH GROUP BY     |		        |   178K|    10M|   355   (4)| 00:00:05 |
+|   7 |     TABLE ACCESS FULL| LIC_SERIES |   178K|    10M|   344   (1)| 00:00:05 |
+-----------------------------------------------------------------------------------
+
+Predicate Information (identified by operation id):
+---------------------------------------------------
+
+   1 - access("A"."TITLE"="B"."TITLE" AND "A"."N_EPISODIOS"="B"."TOTAL_EP")
+
+Note
+-----
+   - dynamic sampling used for this statement (level=2)
 
 
-
+Statistics
+----------------------------------------------------------
+	 25  recursive calls
+	  0  db block gets
+ 1518  consistent gets
+	 25  physical reads
+	  0  redo size
+	544  bytes sent via SQL*Net to client
+	350  bytes received via SQL*Net from client
+	  2  SQL*Net roundtrips to/from client
+	  0  sorts (memory)
+	  0  sorts (disk)
+	  5  rows processed
+*/
 
 
 
@@ -65,3 +138,50 @@ WITH A AS (SELECT TITLE, TO_CHAR(VIEW_DATETIME,'YYYY-MM') eachmonth FROM TAPS_MO
 SELECT C.eachmonth month, B.ACTOR, B.totaltaps
    FROM C JOIN B ON (B.eachmonth=C.eachmonth AND B.totaltaps=C.maxtaps)
    ORDER BY C.eachmonth;
+
+/*
+------------------------------------------------------------------------------------------------------------------
+| Id  | Operation		               | Name			                   | Rows  | Bytes |TempSpc| Cost (%CPU)| Time	   |
+------------------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT	         |				                     |     1 |    63 |	     | 10425   (2)| 00:02:06 |
+|   1 |  TEMP TABLE TRANSFORMATION |				                     |	     |	     |	     |	          |       	 |
+|   2 |   LOAD AS SELECT	         | SYS_TEMP_0FD9D7134_10C61A5C |	     |	     |	     |	          | 	       |
+|   3 |    HASH GROUP BY	         |				                     |   854K|   114M|	     |  1530   (5)| 00:00:19 |
+|*  4 |     HASH JOIN		           |				                     |   854K|   114M|  1392K|  1475   (1)| 00:00:18 |
+|   5 |      TABLE ACCESS FULL	   | CASTS			                 | 15612 |  1204K|	     |    22   (0)| 00:00:01 |
+|   6 |      TABLE ACCESS FULL	   | TAPS_MOVIES		             |   268K|    15M|	     |   448   (2)| 00:00:06 |
+|   7 |   SORT ORDER BY 	         |				                     |     1 |    63 |	     |  8895   (2)| 00:01:47 |
+|*  8 |    HASH JOIN		           |				                     |     1 |    63 |	     |  8894   (2)| 00:01:47 |
+|   9 |     VIEW		               |				                     |     1 |    18 |	     |  4471   (2)| 00:00:54 |
+|  10 |      HASH GROUP BY	       |				                     |     1 |    18 |	     |  4471   (2)| 00:00:54 |
+|  11 |       VIEW		             |				                     |   854K|    14M|	     |  4417   (1)| 00:00:53 |
+|  12 |        TABLE ACCESS FULL   | SYS_TEMP_0FD9D7134_10C61A5C |   854K|    36M|	     |  4417   (1)| 00:00:53 |
+|  13 |     VIEW		               |				                     |   854K|    36M|	     |  4417   (1)| 00:00:53 |
+|  14 |      TABLE ACCESS FULL	   | SYS_TEMP_0FD9D7134_10C61A5C |   854K|    36M|	     |  4417   (1)| 00:00:53 |
+------------------------------------------------------------------------------------------------------------------
+
+Predicate Information (identified by operation id):
+---------------------------------------------------
+
+   4 - access("TITLE"="CASTS"."TITLE")
+   8 - access("B"."EACHMONTH"="C"."EACHMONTH" AND "B"."TOTALTAPS"="C"."MAXTAPS")
+
+Note
+-----
+   - dynamic sampling used for this statement (level=2)
+
+
+Statistics
+----------------------------------------------------------
+	192  recursive calls
+	324  db block gets
+ 2675  consistent gets
+	453  physical reads
+ 1788  redo size
+	692  bytes sent via SQL*Net to client
+	350  bytes received via SQL*Net from client
+	  2  SQL*Net roundtrips to/from client
+	  1  sorts (memory)
+	  0  sorts (disk)
+	 12  rows processed
+*/
