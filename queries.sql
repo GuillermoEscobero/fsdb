@@ -8,6 +8,8 @@ set serveroutput on;
 set autotrace on;
 set timing on;
 
+--Para mostrar los indexes del usuario
+select * from user_indexes;
 
 
 --Query 1
@@ -20,13 +22,50 @@ FROM
  CLIENTS C ON (A.CLIENTID=C.CLIENTID)
 ORDER BY SURNAME, SEC_SURNAME, NAME;
 
---No funca porque no tiene la opcion activada en el server 
-CREATE BITMAP INDEX products_index ON PRODUCTS(TYPE, PRODUCT_NAME);
+
+/*
+SIN CLUSTERS
+------------------------------------------------------------------------------------------
+| Id  | Operation	           | Name	     | Rows  | Bytes |TempSpc| Cost (%CPU)| Time	   |
+------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT     |		       |  4094 |   939K|	     |   305   (1)| 00:00:04 |
+|   1 |  SORT ORDER BY	     |		       |  4094 |   939K|  1032K|   305   (1)| 00:00:04 |
+|*  2 |   HASH JOIN	         |		       |  4094 |   939K|	     |    95   (3)| 00:00:02 |
+|*  3 |    HASH JOIN	       |		       |  4094 |   279K|	     |    72   (2)| 00:00:01 |
+|   4 |     TABLE ACCESS FULL| PRODUCTS  |     8 |   128 |	     |     3   (0)| 00:00:01 |
+|*  5 |     TABLE ACCESS FULL| CONTRACTS |  4094 |   215K|	     |    68   (0)| 00:00:01 |
+|   6 |    TABLE ACCESS FULL | CLIENTS	 |  4666 |   751K|	     |    22   (0)| 00:00:01 |
+------------------------------------------------------------------------------------------
+
+Predicate Information (identified by operation id):
+---------------------------------------------------
+
+   2 - access("CLIENTID"="C"."CLIENTID")
+   3 - access("CONTRACT_TYPE"="PRODUCT_NAME")
+   5 - filter("ENDDATE" IS NULL OR "ENDDATE">SYSDATE@!)
+
+Note
+-----
+   - dynamic sampling used for this statement (level=2)
 
 
+Statistics
+----------------------------------------------------------
+ 1454  recursive calls
+	  0  db block gets
+	738  consistent gets
+	253  physical reads
+	  0  redo size
+218803  bytes sent via SQL*Net to client
+ 3440  bytes received via SQL*Net from client
+	283  SQL*Net roundtrips to/from client
+	 19  sorts (memory)
+	  0  sorts (disk)
+ 4224  rows processed
 
-
-
+*/
+CREATE INDEX contracts_enddate_index ON CONTRACTS (ENDDATE);
+CREATE INDEX products_type_and_name_index ON PRODUCTS (TYPE, PRODUCT_NAME); --?
 
 
 -- QUERY 2
@@ -38,8 +77,8 @@ FROM (SELECT B.ACTOR, COUNT('X') USA_MOVIES
          ORDER BY USA_MOVIES DESC)
 WHERE ROWNUM<6;
 
-
 /*
+SIN CLUSTERS
 ----------------------------------------------------------------------------------
 | Id  | Operation		            | Name	 | Rows  | Bytes | Cost (%CPU)| Time	   |
 ----------------------------------------------------------------------------------
@@ -80,6 +119,12 @@ Statistics
 	  0  sorts (disk)
 	  5  rows processed
 */
+
+/*
+CON CLUSTERS
+
+*/
+CREATE INDEX movies_country_index ON MOVIES (COUNTRY);
 
 
 -- QUERY 3
