@@ -46,7 +46,7 @@ Predicate Information (identified by operation id):
    3 - access("CONTRACT_TYPE"="PRODUCT_NAME")
    5 - filter("ENDDATE" IS NULL OR "ENDDATE">SYSDATE@!)
 
-Note
+Note 
 -----
    - dynamic sampling used for this statement (level=2)
 
@@ -217,7 +217,9 @@ SELECT A.CLIENT, A.TITLE
    FROM (SELECT CLIENT,TITLE,COUNT('X') N_EPISODIOS FROM LIC_SERIES GROUP BY CLIENT,TITLE) A
         JOIN (SELECT TITLE, SUM(EPISODES) TOTAL_EP FROM SEASONS GROUP BY TITLE) B
         ON (A.TITLE=B.TITLE AND A.N_EPISODIOS=B.TOTAL_EP);
+
 CREATE INDEX seasons_title_index ON SEASONS (TITLE);
+
 
 /*
 STOCK
@@ -270,6 +272,7 @@ WITH A AS (SELECT TITLE, TO_CHAR(VIEW_DATETIME,'YYYY-MM') eachmonth FROM TAPS_MO
 SELECT C.eachmonth month, B.ACTOR, B.totaltaps
    FROM C JOIN B ON (B.eachmonth=C.eachmonth AND B.totaltaps=C.maxtaps)
    ORDER BY C.eachmonth;
+   
 
 /*
 STOCK
@@ -318,3 +321,8 @@ Statistics
 	  0  sorts (disk)
 	 12  rows processed
 */
+
+CREATE INDEX seasons_title_index ON SEASONS (TITLE);
+CREATE INDEX movies_country_index ON MOVIES (COUNTRY);
+CREATE INDEX contracts_enddate_index ON CONTRACTS (ENDDATE);
+CREATE INDEX products_type_and_name_index ON PRODUCTS (TYPE, PRODUCT_NAME);
