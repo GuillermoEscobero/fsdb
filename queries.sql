@@ -22,6 +22,8 @@ FROM
  CLIENTS C ON (A.CLIENTID=C.CLIENTID)
 ORDER BY SURNAME, SEC_SURNAME, NAME;
 
+CREATE INDEX contracts_enddate_index ON CONTRACTS (ENDDATE);
+CREATE INDEX products_type_and_name_index ON PRODUCTS (TYPE, PRODUCT_NAME);
 
 /*
 SIN CLUSTERS
@@ -64,8 +66,51 @@ Statistics
  4224  rows processed
 
 */
-CREATE INDEX contracts_enddate_index ON CONTRACTS (ENDDATE);
-CREATE INDEX products_type_and_name_index ON PRODUCTS (TYPE, PRODUCT_NAME); --?
+
+/*
+CON CLUSTER E INDEX
+----------------------------------------------------------------------------------------------------------------
+| Id  | Operation		               | Name			                    | Rows  | Bytes |TempSpc| Cost (%CPU)| Time    |
+----------------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT	         |			                        |  4234 |   917K|       |  1709	 (1)| 00:00:21 |
+|   1 |  SORT ORDER BY		         |			                        |  4234 |   917K|   976K|  1709	 (1)| 00:00:21 |
+|*  2 |   HASH JOIN		             |			                        |  4234 |   917K|       |  1501	 (1)| 00:00:19 |
+|   3 |    INDEX FULL SCAN	       | PRODUCTS_TYPE_AND_NAME_INDEX |     8 |   128 |       |     1	 (0)| 00:00:01 |
+|   4 |    NESTED LOOPS 	         |			                        |  4234 |   851K|       |  1499	 (1)| 00:00:18 |
+|   5 |     TABLE ACCESS FULL	     | CLIENTS		                  |  4074 |   656K|       |  1367	 (1)| 00:00:17 |
+|*  6 |     TABLE ACCESS CLUSTER   | CONTRACTS		                |     1 |    41 |       |     1	 (0)| 00:00:01 |
+|*  7 |      INDEX UNIQUE SCAN	   | INDEX_CLIENT		              |     1 |       |       |     0	 (0)| 00:00:01 |
+----------------------------------------------------------------------------------------------------------------
+
+Predicate Information (identified by operation id):
+---------------------------------------------------
+
+   2 - access("CONTRACT_TYPE"="PRODUCT_NAME")
+   6 - filter("ENDDATE" IS NULL OR "ENDDATE">SYSDATE@!)
+   7 - access("CLIENTID"="C"."CLIENTID")
+
+Note
+-----
+   - dynamic sampling used for this statement (level=2)
+
+
+Statistics
+----------------------------------------------------------
+	  0  recursive calls
+	  0  db block gets
+15043  consistent gets
+ 1834  physical reads
+	  0  redo size
+218808  bytes sent via SQL*Net to client
+ 3440  bytes received via SQL*Net from client
+	283  SQL*Net roundtrips to/from client
+	  1  sorts (memory)
+	  0  sorts (disk)
+ 4224  rows processed
+
+*/
+
+
 
 
 -- QUERY 2
@@ -77,8 +122,11 @@ FROM (SELECT B.ACTOR, COUNT('X') USA_MOVIES
          ORDER BY USA_MOVIES DESC)
 WHERE ROWNUM<6;
 
+CREATE INDEX movies_country_index ON MOVIES (COUNTRY);
+CREATE INDEX casts_actor_index ON CASTS (ACTOR);--no hace na
+
 /*
-SIN CLUSTERS
+STOCK
 ----------------------------------------------------------------------------------
 | Id  | Operation		            | Name	 | Rows  | Bytes | Cost (%CPU)| Time	   |
 ----------------------------------------------------------------------------------
@@ -120,12 +168,49 @@ Statistics
 	  5  rows processed
 */
 
-/*
-CON CLUSTERS
+/* --TODO esto no esta bien...
+CON CLUSTERS E INDEXES
+---------------------------------------------------------------------------------------------------------
+| Id  | Operation			                   | Name 		            | Rows	| Bytes | Cost (%CPU)| Time	    |
+---------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT		             |			                |     5 |   200 |    48   (9)| 00:00:01 |
+|*  1 |  COUNT STOPKEY			             |			                |	      |	      |	           |		      |
+|   2 |   VIEW				                   |			                | 12698 |   496K|    48   (9)| 00:00:01 |
+|*  3 |    SORT ORDER BY STOPKEY	       |			                | 12698 |  1798K|    48   (9)| 00:00:01 |
+|   4 |     HASH GROUP BY		             |			                | 12698 |  1798K|    48   (9)| 00:00:01 |
+|*  5 |      HASH JOIN			             |			                | 12698 |  1798K|    45   (3)| 00:00:01 |
+|   6 |       TABLE ACCESS BY INDEX ROWID| MOVIES		            |  4074 |   262K|    21   (0)| 00:00:01 |
+|*  7 |        INDEX RANGE SCAN 	       | MOVIES_COUNTRY_INDEX |    23 |	      |     1   (0)| 00:00:01 |
+|   8 |       INDEX FAST FULL SCAN	     | PK_CASTS		          | 12700 |   979K|    23   (0)| 00:00:01 |
+---------------------------------------------------------------------------------------------------------
 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+
+   1 - filter(ROWNUM<6)
+   3 - filter(ROWNUM<6)
+   5 - access("MOVIE_TITLE"="B"."TITLE")
+   7 - access("COUNTRY"='USA')
+
+Note
+-----
+   - dynamic sampling used for this statement (level=2)
+
+
+Statistics
+----------------------------------------------------------
+	 14  recursive calls
+	  0  db block gets
+ 4126  consistent gets
+	156  physical reads
+	  0  redo size
+	503  bytes sent via SQL*Net to client
+	349  bytes received via SQL*Net from client
+	  2  SQL*Net roundtrips to/from client
+	  1  sorts (memory)
+	  0  sorts (disk)
+	  5  rows processed
 */
-CREATE INDEX movies_country_index ON MOVIES (COUNTRY);
-
 
 -- QUERY 3
 SELECT A.CLIENT, A.TITLE
@@ -134,6 +219,7 @@ SELECT A.CLIENT, A.TITLE
         ON (A.TITLE=B.TITLE AND A.N_EPISODIOS=B.TOTAL_EP);
 
 /*
+STOCK
 ---------------------------------------------------------------------------------
 | Id  | Operation	           | Name	      | Rows  | Bytes | Cost (%CPU)| Time	    |
 -----------------------------------------------------------------------------------
@@ -185,6 +271,7 @@ SELECT C.eachmonth month, B.ACTOR, B.totaltaps
    ORDER BY C.eachmonth;
 
 /*
+STOCK
 ------------------------------------------------------------------------------------------------------------------
 | Id  | Operation		               | Name			                   | Rows  | Bytes |TempSpc| Cost (%CPU)| Time	   |
 ------------------------------------------------------------------------------------------------------------------
