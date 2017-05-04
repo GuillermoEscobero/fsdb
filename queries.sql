@@ -120,6 +120,8 @@ Statistics
 	  0  sorts (disk)
 	  5  rows processed
 */
+CREATE INDEX movies_country_index ON MOVIES (COUNTRY);
+CREATE BITMAP INDEX movies_country_bitmap_index ON MOVIES (COUNTRY);
 
 
 -- QUERY 3
