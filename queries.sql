@@ -24,6 +24,7 @@ ORDER BY SURNAME, SEC_SURNAME, NAME;
 
 
 /*
+SIN CLUSTERS
 ------------------------------------------------------------------------------------------
 | Id  | Operation	           | Name	     | Rows  | Bytes |TempSpc| Cost (%CPU)| Time	   |
 ------------------------------------------------------------------------------------------
@@ -64,9 +65,7 @@ Statistics
 
 */
 CREATE INDEX contracts_enddate_index ON CONTRACTS (ENDDATE);
---mejoran las recursive calls, sorts (memory(, consistent y algo los physical reads
----TODO si hacemos un cluster en las joins, oracle en teoria solo tiene que acceder al mismo
---cluster para sacar las dos tablas, mejorando en teoria el dato de lectura de la base de datos
+CREATE INDEX products_type_and_name_index ON PRODUCTS (TYPE, PRODUCT_NAME); --?
 
 
 -- QUERY 2
@@ -78,8 +77,8 @@ FROM (SELECT B.ACTOR, COUNT('X') USA_MOVIES
          ORDER BY USA_MOVIES DESC)
 WHERE ROWNUM<6;
 
-
 /*
+SIN CLUSTERS
 ----------------------------------------------------------------------------------
 | Id  | Operation		            | Name	 | Rows  | Bytes | Cost (%CPU)| Time	   |
 ----------------------------------------------------------------------------------
@@ -120,8 +119,12 @@ Statistics
 	  0  sorts (disk)
 	  5  rows processed
 */
+
+/*
+CON CLUSTERS
+
+*/
 CREATE INDEX movies_country_index ON MOVIES (COUNTRY);
-CREATE BITMAP INDEX movies_country_bitmap_index ON MOVIES (COUNTRY);
 
 
 -- QUERY 3
