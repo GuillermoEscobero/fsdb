@@ -46,7 +46,7 @@ Predicate Information (identified by operation id):
    3 - access("CONTRACT_TYPE"="PRODUCT_NAME")
    5 - filter("ENDDATE" IS NULL OR "ENDDATE">SYSDATE@!)
 
-Note 
+Note
 -----
    - dynamic sampling used for this statement (level=2)
 
@@ -272,7 +272,6 @@ WITH A AS (SELECT TITLE, TO_CHAR(VIEW_DATETIME,'YYYY-MM') eachmonth FROM TAPS_MO
 SELECT C.eachmonth month, B.ACTOR, B.totaltaps
    FROM C JOIN B ON (B.eachmonth=C.eachmonth AND B.totaltaps=C.maxtaps)
    ORDER BY C.eachmonth;
-   
 
 /*
 STOCK
@@ -324,5 +323,8 @@ Statistics
 
 CREATE INDEX seasons_title_index ON SEASONS (TITLE);
 CREATE INDEX movies_country_index ON MOVIES (COUNTRY);
-CREATE INDEX contracts_enddate_index ON CONTRACTS (ENDDATE);
+--CREATE INDEX contracts_enddate_index ON CONTRACTS (ENDDATE);
 CREATE INDEX products_type_and_name_index ON PRODUCTS (TYPE, PRODUCT_NAME);
+
+--INDEXES DE LA FUNCTION
+CREATE INDEX function_startdatenddate_index ON CONTRACTS (ENDDATE,STARTDATE);
