@@ -343,3 +343,6 @@ CREATE INDEX series_avgduration_index ON SEASONS (AVGDURATION);--este no sirve d
 CREATE INDEX lic_movies_client_title_index ON LIC_MOVIES (TITLE);
 CREATE INDEX lic_series_clien_more_index ON LIC_SERIES (CLIENT, TITLE, EPISODE, SEASON);
 CREATE INDEX clients_name_surname_sec_index ON CLIENTS(NAME, SURNAME, SEC_SURNAME);
+
+--INDEX de gabri, un puto fiel a la causa
+CREATE INDEX  clientid_year_month ON INVOICES (CLIENTID, YEAR, MONTH); --TODO rename this index to match the others
