@@ -327,4 +327,4 @@ CREATE INDEX movies_country_index ON MOVIES (COUNTRY);
 CREATE INDEX products_type_and_name_index ON PRODUCTS (TYPE, PRODUCT_NAME);
 
 --INDEXES DE LA FUNCTION
-CREATE INDEX function_startdatenddate_index ON CONTRACTS (ENDDATE,STARTDATE);
+CREATE INDEX function_startdatenddate_index ON CONTRACTS (CLIENTID, ENDDATE, STARTDATE);
