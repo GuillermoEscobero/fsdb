@@ -330,8 +330,9 @@ CREATE INDEX products_type_and_name_index ON PRODUCTS (TYPE, PRODUCT_NAME);
 CREATE INDEX function_startdatenddate_index ON CONTRACTS (CLIENTID, ENDDATE, STARTDATE);
 
 CREATE INDEX movies_duration_index ON MOVIES (DURATION);
-CREATE INDEX series_avgduration_index ON SEASONS (AVGDURATION);
+CREATE INDEX series_avgduration_index ON SEASONS (AVGDURATION);--este no sirve de na
 
 --INDEX de prueba que lo mismo explotan
-CREATE INDEX lic_movies_client_title_index ON LIC_MOVIES (CLIENT, TITLE);
-CREATE INDEX lic_series_client_title_episode_season ON LIC_SERIES (CLIENT, TITLE, EPISODE, SEASON)
+CREATE INDEX lic_movies_client_title_index ON LIC_MOVIES (TITLE);
+CREATE INDEX lic_series_client_title_episode_season_index ON LIC_SERIES (CLIENT, TITLE, EPISODE, SEASON);
+CREATE INDEX clients_name_surname_sec_index ON CLIENTS(NAME, SURNAME. SEC_SURNAME);
