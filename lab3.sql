@@ -1,3 +1,9 @@
+-------------------------------------------------------------------------------
+-- lab3.sql
+-- Guillermo Escobero & Raul Olmedo
+-- UC3M - Group 89
+-------------------------------------------------------------------------------
+
 CREATE OR REPLACE PACKAGE PKG_COSTES AS
 
 -- auxiliary function converting an interval into a number (milliseconds)

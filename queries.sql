@@ -1,3 +1,10 @@
+-------------------------------------------------------------------------------
+-- queries.sql
+-- Queries data for analysis
+-- Raul Olmedo & Guillermo Escobero
+-- UC3M - Group 89
+-------------------------------------------------------------------------------
+
 SET LINESIZE 256;
 SET TRIMSPOOL ON;
 SET TRIMOUT ON;
