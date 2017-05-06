@@ -342,4 +342,4 @@ CREATE INDEX series_avgduration_index ON SEASONS (AVGDURATION);--este no sirve d
 --INDEX de prueba que lo mismo explotan
 CREATE INDEX lic_movies_client_title_index ON LIC_MOVIES (TITLE);
 CREATE INDEX lic_series_clien_more_index ON LIC_SERIES (CLIENT, TITLE, EPISODE, SEASON);
-CREATE INDEX clients_name_surname_sec_index ON CLIENTS(NAME, SURNAME. SEC_SURNAME);
+CREATE INDEX clients_name_surname_sec_index ON CLIENTS(NAME, SURNAME, SEC_SURNAME);
