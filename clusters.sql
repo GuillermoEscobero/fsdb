@@ -1,3 +1,9 @@
+-------------------------------------------------------------------------------
+-- clusters.sql
+-- Guillermo Escobero & Raul Olmedo
+-- UC3M - Group 89
+-------------------------------------------------------------------------------
+
 CREATE CLUSTER movie_cluster(movie_title VARCHAR2(100 CHAR));
 CREATE CLUSTER series_cluster(movie_title VARCHAR2(100 CHAR));
 CREATE CLUSTER client_cluster(clientid VARCHAR2(15 CHAR));
