@@ -326,5 +326,12 @@ CREATE INDEX movies_country_index ON MOVIES (COUNTRY);
 --CREATE INDEX contracts_enddate_index ON CONTRACTS (ENDDATE);
 CREATE INDEX products_type_and_name_index ON PRODUCTS (TYPE, PRODUCT_NAME);
 
---INDEXES DE LA FUNCTION
+--INDEX DE LA FUNCTION
 CREATE INDEX function_startdatenddate_index ON CONTRACTS (CLIENTID, ENDDATE, STARTDATE);
+
+CREATE INDEX movies_duration_index ON MOVIES (DURATION);
+CREATE INDEX series_avgduration_index ON SEASONS (AVGDURATION);
+
+--INDEX de prueba que lo mismo explotan
+CREATE INDEX lic_movies_client_title_index ON LIC_MOVIES (CLIENT, TITLE);
+CREATE INDEX lic_series_client_title_episode_season ON LIC_SERIES (CLIENT, TITLE, EPISODE, SEASON)
