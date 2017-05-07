@@ -44,7 +44,7 @@ CREATE CLUSTER MOVIE_CLUSTER (MOVIE_TITLE VARCHAR2(100));
 CREATE CLUSTER CONTRACT_CLUSTER(CONTRACTID VARCHAR2(10));
 
 -- ----------------------------------------------------
--- -- Part IIb: Create cluster index ------------------
+-- -- Part IIb: Create clusters' indexes --------------
 -- ----------------------------------------------------
 
 CREATE INDEX CLIENT_CLUSTER_INDEX ON CLUSTER CLIENT_CLUSTER;
@@ -242,3 +242,15 @@ CONSTRAINT PK_invcs PRIMARY KEY (clientId,month,year),
 CONSTRAINT FK_invcs FOREIGN KEY (clientId) REFERENCES clients
 )
 CLUSTER CLIENT_CLUSTER(CLIENTID);
+
+-- ----------------------------------------------------
+-- -- Part IId: Create indexes ------------------------
+-- ----------------------------------------------------
+
+CREATE INDEX products_type_and_name_index ON PRODUCTS (TYPE, PRODUCT_NAME);
+CREATE INDEX function_startdatenddate_index ON CONTRACTS (CLIENTID, ENDDATE, STARTDATE);
+CREATE INDEX lic_movies_client_title_index ON LIC_MOVIES (TITLE);
+CREATE INDEX lic_series_clien_more_index ON LIC_SERIES (CLIENT, TITLE, EPISODE, SEASON);
+CREATE INDEX clients_name_surname_sec_index ON CLIENTS(NAME, SURNAME, SEC_SURNAME);
+CREATE INDEX movies_country_duration_index ON MOVIES(COUNTRY, DURATION);
+CREATE INDEX clientid_year_month ON INVOICES (CLIENTID, YEAR, MONTH);

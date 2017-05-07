@@ -337,4 +337,4 @@ CREATE INDEX lic_series_clien_more_index ON LIC_SERIES (CLIENT, TITLE, EPISODE, 
 CREATE INDEX clients_name_surname_sec_index ON CLIENTS(NAME, SURNAME, SEC_SURNAME);
 CREATE INDEX movies_country_duration_index ON MOVIES(COUNTRY, DURATION);
 CREATE INDEX clientid_year_month ON INVOICES (CLIENTID, YEAR, MONTH);
---CREATE INDEX seasons_duration_title_index ON SEASONS(TITLE, AVGDURATION);
+--CREATE INDEX seasons_duration_title_index ON SEASONS(TITLE, AVGDURATION); --no ha quitado casi nada, dropeado
